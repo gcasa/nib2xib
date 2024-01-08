@@ -31,16 +31,21 @@
 	{
 		NSString *objectsNib = [nibNamed stringByAppendingPathComponent: @"objects.nib"];
 		NSString *dataClasses = [nibNamed stringByAppendingPathComponent: @"data.classes"];
-		id obj = [NSUnarchiver unarchiveObjectWithFile: objectsNib];
-		id rootObject = [obj rootObject];
+		NSArray *connections = nil;
+
+		_object = [NSUnarchiver unarchiveObjectWithFile: objectsNib];
+		_rootObject = [_object rootObject];
+		// connections = [_object connections];
 
 		// NSLog(@"objectsNib = %@", objectsNib);
 		// NSLog(@"dataClasses = %@", dataClasses);
+
+		// NSLog(@"connections = %@", connections);
 		_objectsDictionary = [NSMutableDictionary dictionary];
 		_classesDictionary = [NSMutableDictionary dictionaryWithContentsOfClassesFile: dataClasses];
 
-		NSLog(@"obj = %@", obj);
-		NSLog(@"rootObject = %@", rootObject);
+		NSLog(@"_object = %@", _object);
+		NSLog(@"_rootObject = %@", _rootObject);
 		NSLog(@"_classesDictionary = %@", _classesDictionary);
 	}
 	return self;

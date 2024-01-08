@@ -8,6 +8,8 @@
 {
 	NSMutableDictionary *_objectsDictionary;
 	NSMutableDictionary *_classesDictionary;
+	id _object;
+	id _rootObject;
 }
 
 - (id) initWithNibNamed: (NSString *)nibNamed;
