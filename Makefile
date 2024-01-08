@@ -13,9 +13,9 @@ PROJECTVERSION = 2.6
 PROJECT_TYPE = Tool
 LANGUAGE = English
 
-CLASSES = NSIBObjectData.m NSXMLDocument.m NSXMLElement.m NSXMLNode.m
+CLASSES = NIBParser.m NSIBObjectData.m NSXMLDocument.m NSXMLElement.m NSXMLNode.m
 
-HFILES = NSClassSwapper.h NSIBObjectData.h NSXMLDocument.h\
+HFILES = NIBParser.h NSClassSwapper.h NSIBObjectData.h NSXMLDocument.h\
          NSXMLElement.h NSXMLNode.h
 
 MFILES = nib2xib_main.m

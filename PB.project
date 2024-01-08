@@ -2,9 +2,10 @@
     APPCLASS = NSApplication; 
     DYNAMIC_CODE_GEN = YES; 
     FILESTABLE = {
-        CLASSES = (NSIBObjectData.m, NSXMLDocument.m, NSXMLElement.m, NSXMLNode.m); 
+        CLASSES = (NIBParser.m, NSIBObjectData.m, NSXMLDocument.m, NSXMLElement.m, NSXMLNode.m); 
         FRAMEWORKS = (AppKit.framework, Foundation.framework); 
         H_FILES = (
+            NIBParser.h,
             NSClassSwapper.h, 
             NSIBObjectData.h, 
             NSXMLDocument.h, 
