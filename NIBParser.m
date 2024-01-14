@@ -2,7 +2,12 @@
 #import <Foundation/NSDictionary.h>
 
 #import "NSIBObjectData.h"
+#import "NSCustomObject.h"
+#import "NSWindowTemplate.h"
+
 #import "NIBParser.h"
+
+#define DEBUG
 
 @interface NSMutableDictionary (LoadNibFormat)
 + (NSMutableDictionary *) dictionaryWithContentsOfClassesFile: (NSString *)file;
@@ -35,24 +40,64 @@
 
 		_object = [NSUnarchiver unarchiveObjectWithFile: objectsNib];
 		_rootObject = [_object rootObject];
-		// connections = [_object connections];
 
-		// NSLog(@"objectsNib = %@", objectsNib);
-		// NSLog(@"dataClasses = %@", dataClasses);
+#ifdef DEBUG		
+		connections = [_object connections];
+		NSLog(@"objectsNib = %@", objectsNib);
+		NSLog(@"dataClasses = %@", dataClasses);
+		NSLog(@"connections = %@", connections);
+#endif
 
-		// NSLog(@"connections = %@", connections);
 		_objectsDictionary = [NSMutableDictionary dictionary];
 		_classesDictionary = [NSMutableDictionary dictionaryWithContentsOfClassesFile: dataClasses];
 
+#ifdef DEBUG
 		NSLog(@"_object = %@", _object);
 		NSLog(@"_rootObject = %@", _rootObject);
 		NSLog(@"_classesDictionary = %@", _classesDictionary);
+#endif
 	}
 	return self;
 }
 
+
+- (void) handleCustomObject: (NSCustomObject *)o
+                    withKey: (NSString *)key
+{
+	NSLog(@"key = %@, o = %@", key, o);
+}
+
+
 - (NSDictionary *) parse
 {
+	NSMapTable *nameTable = [_object nameTable];
+	NSArray *values = NSAllMapTableValues(nameTable);
+	NSArray *keys = NSAllMapTableKeys(nameTable);
+	NSEnumerator *en = [keys objectEnumerator];
+	id o = nil;
+
+	NSLog(@"values = %@", values);
+	NSLog(@"keys = %@", keys);
+
+	// Create the root entry...
+	[_objectsDictionary setObject: [NSMutableDictionary dictionary]	forKey: @"objects"];
+
+	// Iterate over all objects in the map table...
+	while ((o = [en nextObject]) != nil)
+	{
+		NSString *key = NSMapGet(nameTable, o);
+
+		if ([o isKindOfClass: [NSWindowTemplate class]])
+		{
+			NSLog(@"Window Title = %@", [o windowTitle]);
+			NSLog(@"Window View = %@", [o windowView]);
+		}
+		else if ([o isKindOfClass: [NSCustomObject class]])
+		{
+			[self handleCustomObject: o withKey: key];
+		}
+	}
+
 	return nil;
 }
 

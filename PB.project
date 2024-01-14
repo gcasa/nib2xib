@@ -2,7 +2,7 @@
     APPCLASS = NSApplication; 
     DYNAMIC_CODE_GEN = YES; 
     FILESTABLE = {
-        CLASSES = (NIBParser.m, NSIBObjectData.m, NSXMLDocument.m, NSXMLElement.m, NSXMLNode.m); 
+        CLASSES = (NIBParser.m, NSIBObjectData.m, NSXMLDocument.m, NSXMLElement.m, NSXMLNode.m, NSWindowTemplate.m, NSCustomObject.m); 
         FRAMEWORKS = (AppKit.framework, Foundation.framework); 
         H_FILES = (
             NIBParser.h,
@@ -10,7 +10,9 @@
             NSIBObjectData.h, 
             NSXMLDocument.h, 
             NSXMLElement.h, 
-            NSXMLNode.h
+            NSXMLNode.h,
+            NSWindowTemplate.h,
+            NSCustomObject.h
         ); 
         INTERFACES = (NEXTSTEP_nib2xib.nib, WINDOWS_nib2xib.nib); 
         OTHER_LINKED = (nib2xib_main.m); 
