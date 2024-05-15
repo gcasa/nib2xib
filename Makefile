@@ -14,10 +14,11 @@ PROJECT_TYPE = Tool
 LANGUAGE = English
 
 CLASSES = NIBParser.m NSIBObjectData.m NSXMLDocument.m NSXMLElement.m NSXMLNode.m\
-          NSWindowTemplate.m NSCustomObject.m
+          NSWindowTemplate.m NSMenuTemplate.m NSCustomObject.m
 
 HFILES = NIBParser.h NSClassSwapper.h NSIBObjectData.h NSXMLDocument.h\
-         NSXMLElement.h NSXMLNode.h NSWindowTemplate.h NSCustomObject.h
+         NSXMLElement.h NSXMLNode.h NSWindowTemplate.h NSCustomObject.h\
+         NSMenuTemplate.h
 
 MFILES = nib2xib_main.m
 

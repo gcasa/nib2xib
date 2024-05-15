@@ -4,6 +4,7 @@
 #import "NSIBObjectData.h"
 #import "NSCustomObject.h"
 #import "NSWindowTemplate.h"
+#import "NSMenuTemplate.h"
 
 #import "NIBParser.h"
 
@@ -60,6 +61,15 @@
 	return self;
 }
 
+- (void) handleMenuObject: (NSMenuTemplate *)mt
+{
+	NSLog(@"\tMenu Title = %@", [mt title]);
+	NSLog(@"\tSupermenu = %@", [mt supermenu]);
+	NSLog(@"\tisWindowsMenu = %d", [mt isWindowsMenu]);
+	NSLog(@"\tisFontMenu = %d", [mt isFontMenu]);
+	NSLog(@"\trealObject = %@", [mt realObject]);
+}
+
 
 - (void) handleCustomObject: (NSCustomObject *)o
                     withKey: (NSString *)key
@@ -113,6 +123,10 @@
 		else if ([o isKindOfClass: [NSCustomObject class]])
 		{
 			[self handleCustomObject: o withKey: key];
+		}
+		else if ([o isKindOfClass: [NSMenuTemplate class]])
+		{
+			[self handleMenuObject: o];
 		}
 		else
 		{
