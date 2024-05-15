@@ -58,11 +58,4 @@
 	return interfaceStyle;
 }
 
-- (NSString *) altdescription
-{
-	// NSString *desc = [super description];
-	return [NSString stringWithFormat: @"<NSMenuTemplate> - <title = %@, menuClassName = %@", // , view = %@, supermenu = %@, extension = %@, isWindowsMenu = %d, isRequestMenu = %d, isFontMenu = %d, interfaceStyle = %d",
-			title, menuClassName]; // , view, supermenu, extension, isWindowsMenu, isRequestMenu, isFontMenu, interfaceStyle];
-}
-
 @end
