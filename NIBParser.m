@@ -68,6 +68,21 @@
 }
 
 
+- (void) processWindowViews: (NSView *)view level: (int)level
+{
+	NSEnumerator *en = [[view subviews] objectEnumerator];
+	id v = nil;
+
+	while((v = [en nextObject]) != nil)
+	{
+		[self processWindowViews: v level: level + 1];
+	}
+
+	NSLog(@"view = %@, level = %d", view, level);
+
+}
+
+
 - (NSDictionary *) parse
 {
 	NSMapTable *nameTable = [_object nameTable];
@@ -89,12 +104,19 @@
 
 		if ([o isKindOfClass: [NSWindowTemplate class]])
 		{
+			NSView *windowView = [o windowView];
+
 			NSLog(@"Window Title = %@", [o windowTitle]);
-			NSLog(@"Window View = %@", [o windowView]);
+			NSLog(@"Window View = %@", windowView);
+			[self processWindowViews: windowView level: 0];
 		}
 		else if ([o isKindOfClass: [NSCustomObject class]])
 		{
 			[self handleCustomObject: o withKey: key];
+		}
+		else
+		{
+			NSLog(@"Unknown class: %@", o);
 		}
 	}
 
