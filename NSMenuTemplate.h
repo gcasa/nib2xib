@@ -32,6 +32,5 @@
 - (BOOL) isRequestMenu;
 - (BOOL) isFontMenu;
 - (int) interfaceStyle;
-- (NSString *) altdescription;
 
 @end
