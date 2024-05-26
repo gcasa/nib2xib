@@ -1,4 +1,4 @@
 #import <Foundation/Foundation.h>
 
-@interface NSXMLNode : NSObject
+@interface XMLNode : NSObject
 @end
