@@ -1,7 +1,7 @@
 /* NSIBObjectData.h created by heron on Fri 13-Oct-2023 */
 
 #import <AppKit/AppKit.h>
-#import <Foundation/Foundation.h>
+#import <Foundation/NSObject.h>
 
 @interface NSIBObjectData : NSObject
 {
