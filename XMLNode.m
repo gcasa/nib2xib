@@ -12,9 +12,9 @@
 	if (self != nil)
 	{
 		[self setName: name];
-		[self setAttributes: _attributes];
-		[self setElements: _elements];
-		[self setValue: _value];
+		[self setAttributes: attributes];
+		[self setElements: elements];
+		[self setValue: value];
 	}
 	return self;
 }
