@@ -25,4 +25,14 @@
 #import "XMLNode.h"
 
 @interface XMLDocument : XMLNode
+{
+	NSString *_header;
+}
+
+- (id) initWithString: (NSString *)header;
+
+- (void) setHeader: (NSString *)header;
+
+- (NSString *) header;
+
 @end

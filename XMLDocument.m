@@ -24,4 +24,25 @@
 #import "XMLDocument.h"
 
 @implementation XMLDocument
+
+- (id) initWithString: (NSString *)header
+{
+	self = [super init];
+	if (self != nil)
+	{
+		[self setHeader: header];
+	}
+	return self;
+}
+
+- (void) setHeader: (NSString *)header
+{
+	_header = [header retain];
+}
+
+- (NSString *) header 
+{
+	return _header;
+}
+
 @end
