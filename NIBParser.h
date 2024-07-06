@@ -26,6 +26,7 @@
 @class NSDictionary;
 @class NSMutableDictionary;
 @class NSString;
+@class XMLDocument;
 
 @interface NIBParser : NSObject
 {
@@ -33,9 +34,11 @@
 	NSMutableDictionary *_classesDictionary;
 	id _object;
 	id _rootObject;
+
+	XMLDocument *_document;
 }
 
 - (id) initWithNibNamed: (NSString *)nibNamed;
-- (NSDictionary *) parse;
+- (id) parse;
 
 @end

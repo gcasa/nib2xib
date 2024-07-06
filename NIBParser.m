@@ -1,3 +1,26 @@
+/* Copyright (C) 2024 Free Software Foundation, Inc.
+ *
+ * Author:      Gregory John Casamento <greg.casamento@gmail.com>
+ * Date:        2024
+ *
+ * This file is part of GNUstep.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111
+ * USA.
+ */
+
 #import <Foundation/NSArchiver.h>
 #import <Foundation/NSDictionary.h>
 
@@ -7,6 +30,8 @@
 #import "NSMenuTemplate.h"
 
 #import "NIBParser.h"
+#import "XMLDocument.h"
+#import "XMLNode.h"
 
 #define DEBUG
 
@@ -63,11 +88,13 @@
 
 - (void) handleMenuObject: (NSMenuTemplate *)mt
 {
+	// id o = [mt nibInstantiate];
 	NSLog(@"\tMenu Title = %@", [mt title]);
 	NSLog(@"\tSupermenu = %@", [mt supermenu]);
 	NSLog(@"\tisWindowsMenu = %d", [mt isWindowsMenu]);
 	NSLog(@"\tisFontMenu = %d", [mt isFontMenu]);
 	NSLog(@"\trealObject = %@", [mt realObject]);
+	// NSLog(@"\to = %@", o);
 }
 
 
@@ -93,7 +120,7 @@
 }
 
 
-- (NSDictionary *) parse
+- (id) parse
 {
 	NSMapTable *nameTable = [_object nameTable];
 	NSArray *values = NSAllMapTableValues(nameTable);
@@ -114,8 +141,10 @@
 
 		if ([o isKindOfClass: [NSWindowTemplate class]])
 		{
+			XMLNode *xml = [o toXML];
 			NSView *windowView = [o windowView];
 
+			NSLog(@"XML = %@", xml);
 			NSLog(@"Window Title = %@", [o windowTitle]);
 			NSLog(@"Window View = %@", windowView);
 			[self processWindowViews: windowView level: 0];

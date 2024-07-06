@@ -24,6 +24,8 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
+@class XMLNode;
+
 typedef struct _GSWindowTemplateFlags
 {
     unsigned int isHiddenOnDeactivate:1;
@@ -60,6 +62,10 @@ typedef struct _GSWindowTemplateFlags
 }
 @end
 
+@interface NSView (toXML)
+- (XMLNode *) toXML;
+@end
+
 @interface NSWindowTemplate (Methods)
 
 - (int) interfaceStyle;
@@ -76,5 +82,6 @@ typedef struct _GSWindowTemplateFlags
 - (NSSize) minSize;
 - (GSWindowTemplateFlags) wtFlags;
 - (NSRect) screenRect;
+- (XMLNode *) toXML;
 
 @end

@@ -22,6 +22,7 @@
  */
 
 #import "NSWindowTemplate.h"
+#import "XMLNode.h"
 
 @implementation NSWindowTemplate (Methods)
 
@@ -88,6 +89,63 @@
 - (NSRect) screenRect
 {
     return screenRect;
+}
+
+- (NSMutableDictionary *) attributesFromProperties
+{
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+
+    // Title and other string properties...
+    [result setObject: windowTitle forKey: @"title"];
+
+    // Flags...
+    // TODO...
+
+    return result;
+}
+
+- (XMLNode *) toXML
+{
+    XMLNode *windowViewXml = [windowView toXML];
+    NSMutableDictionary *attributes = [self attributesFromProperties];
+    NSMutableArray *elements = [NSMutableArray arrayWithObject: windowViewXml];
+    XMLNode *node = [[XMLNode alloc] initWithName: @"window" value: @"" attributes: attributes elements: elements];
+
+    return node;
+}
+
+@end
+
+@implementation NSView (toXML)
+
+- (NSMutableArray *) subviewsToXml
+{
+    NSMutableArray *array = [NSMutableArray array];
+    NSEnumerator *en = [[self subviews] objectEnumerator];
+    NSView *v = nil;
+
+    while ((v = [en nextObject]) != nil)
+    {
+        XMLNode *n = [v toXML];
+        [array addObject: n];        
+    }
+
+    return array;
+}
+
+- (NSMutableDictionary *) attributesFromProperties
+{
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    // TODO
+    return result;
+}
+
+- (XMLNode *) toXML
+{
+    NSMutableDictionary *attributes = [self attributesFromProperties];
+    NSMutableArray *elements = [self subviewsToXml];
+    XMLNode *node = [[XMLNode alloc] initWithName: @"view" value: @"" attributes: attributes elements: elements];
+    return node;
 }
 
 @end

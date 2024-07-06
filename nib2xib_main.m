@@ -33,11 +33,11 @@ int main(int argc, const char *argv[])
   {
     NSString *nibName = [NSString stringWithCString: argv[1]];
     NIBParser *parser = [[NIBParser alloc] initWithNibNamed: nibName];
-    NSDictionary *dict = [parser parse];
+    id output = [parser parse];
 
     NSLog(@"--- Output");
     NSLog(@"parser = %@", parser);
-    NSLog(@"dict = %@", dict);
+    NSLog(@"output = %@", output);
   }
 
   [pool release];
