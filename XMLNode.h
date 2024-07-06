@@ -53,4 +53,6 @@
 - (void) addElement: (XMLNode *)element;
 - (void) addAttribute: (NSString *)key value: (NSString *)value;
 
+- (NSString *) description;
+
 @end

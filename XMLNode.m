@@ -21,9 +21,7 @@
  * USA.
  */
 
-#import <Foundation/NSString.h>
-#import <Foundation/NSArray.h>
-#import <Foundation/NSDictionary.h>
+#import <Foundation/Foundation.h>
 
 #import "XMLNode.h"
 
@@ -115,6 +113,28 @@
 		elements: [self elements]];
 
 	return node;
+}
+
+- (NSString *) describeAttributes
+{
+	NSString *result = @"";
+	NSEnumerator *en = [_attributes keyEnumerator];
+	NSString *k = nil;
+
+	while ((k = [en nextObject]) != nil)
+	{
+		NSString *v = [_attributes objectForKey: k];
+		result = [result stringByAppendingString: [NSString stringWithFormat: @" %@ = %@", k, v]];
+	}
+
+	return result;
+}
+
+- (NSString *) description
+{
+	NSString *result = [NSString stringWithFormat: @"<%@%@>%@%@</%@>", 
+		_name, [self describeAttributes], _value, _elements, _name];
+	return result;
 }
 
 @end
