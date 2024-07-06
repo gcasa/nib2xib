@@ -22,9 +22,24 @@
  */
 
 #import <AppKit/NSView.h>
+#import <AppKit/NSButton.h>
+#import <AppKit/NSTextField.h>
+
 #import "XMLNode.h"
 
 @interface NSView (toXML)
+
+- (XMLNode *) toXML;
+
+@end
+
+@interface NSButton (toXML)
+
+- (XMLNode *) toXML;
+
+@end
+
+@interface NSTextField (toXML)
 
 - (XMLNode *) toXML;
 

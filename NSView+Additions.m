@@ -69,3 +69,25 @@
 }
 
 @end
+
+@implementation NSButton (toXML)
+
+- (XMLNode *) toXML
+{
+    XMLNode *node = [super toXML];
+    [node addAttribute: @"title" value: [self title]];
+    return node;
+}
+
+@end
+
+@implementation NSTextField (toXML)
+
+- (XMLNode *) toXML
+{
+    XMLNode *node = [super toXML];
+    // [node addAttribute: @"title" value: [self stringValue]];
+    return node;
+}
+
+@end
