@@ -21,10 +21,13 @@
  * USA.
  */
 
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+
 #import "NSWindowTemplate.h"
+
 #import "XMLNode.h"
 #import "NSString+Additions.h"
-
 @implementation NSWindowTemplate (Methods)
 
 - (int) interfaceStyle
@@ -105,15 +108,26 @@
     return result;
 }
 
+- (NSMutableDictionary *) frameAttributes
+{
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    [result setObject: [NSString stringWithFormat: @"%f", windowRect.origin.x] forKey: @"x"];
+    [result setObject: [NSString stringWithFormat: @"%f", windowRect.origin.y] forKey: @"y"];
+    [result setObject: [NSString stringWithFormat: @"%f", windowRect.size.width] forKey: @"width"];
+    [result setObject: [NSString stringWithFormat: @"%f", windowRect.size.height] forKey: @"height"];
+    [result setObject: @"contentRect" forKey: @"key"];
+    return result;
+}
+
 - (XMLNode *) toXML
 {
     XMLNode *windowViewXml = [windowView toXML];
     NSMutableDictionary *attributes = [self attributesFromProperties];
     NSMutableArray *elements = [NSMutableArray arrayWithObject: windowViewXml];
-    NSString *className = NSStringFromClass([self class]);
-    NSString *name = [className classNameToTagName];
+    NSString *name = [windowClass classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
-
+    XMLNode *frame = [[XMLNode alloc] initWithName: @"rect" value: @"" attributes: [self frameAttributes] elements: nil];
+    [node addElement: frame];
     return node;
 }
 
@@ -143,6 +157,17 @@
     return result;
 }
 
+- (NSMutableDictionary *) frameAttributes
+{
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    [result setObject: [NSString stringWithFormat: @"%f", [self frame].origin.x] forKey: @"x"];
+    [result setObject: [NSString stringWithFormat: @"%f", [self frame].origin.y] forKey: @"y"];
+    [result setObject: [NSString stringWithFormat: @"%f", [self frame].size.width] forKey: @"width"];
+    [result setObject: [NSString stringWithFormat: @"%f", [self frame].size.height] forKey: @"height"];
+    [result setObject: @"frame" forKey: @"key"];
+    return result;
+}
+
 - (XMLNode *) toXML
 {
     NSMutableDictionary *attributes = [self attributesFromProperties];
@@ -150,6 +175,8 @@
     NSString *className = NSStringFromClass([self class]);    
     NSString *name = [className classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
+    XMLNode *frame = [[XMLNode alloc] initWithName: @"rect" value: @"" attributes: [self frameAttributes] elements: nil];
+    [node addElement: frame];
     return node;
 }
 

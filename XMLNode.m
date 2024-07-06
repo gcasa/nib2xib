@@ -71,7 +71,7 @@
 
 - (void) setAttributes: (NSMutableDictionary *) attributes
 {
-	_attributes = [[attributes copy] retain];
+	_attributes = [attributes retain];
 }
 
 - (NSMutableArray *) elements
@@ -81,7 +81,7 @@
 
 - (void) setElements: (NSMutableArray *) elements
 {
-	_elements = [[elements copy] retain];
+	_elements = [elements retain];
 }
 
 - (NSString *) value
