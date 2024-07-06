@@ -27,6 +27,21 @@
 
 @implementation XMLNode
 
++ (id) nodeForRect: (NSRect)frame type: (NSString *)type
+{
+	NSMutableDictionary *result = [NSMutableDictionary dictionary];
+	XMLNode *node = nil;
+
+    [result setObject: [NSString stringWithFormat: @"%g", frame.origin.x] forKey: @"x"];
+    [result setObject: [NSString stringWithFormat: @"%g", frame.origin.y] forKey: @"y"];
+    [result setObject: [NSString stringWithFormat: @"%g", frame.size.width] forKey: @"width"];
+    [result setObject: [NSString stringWithFormat: @"%g", frame.size.height] forKey: @"height"];
+    [result setObject: type forKey: @"key"];
+	
+	node = [[XMLNode alloc] initWithName: @"rect" value: @"" attributes: result elements: nil];
+	return node;
+}
+
 - (id) initWithName: (NSString *)name value: (NSString *)value attributes: (NSMutableDictionary *)attributes elements: (NSMutableArray *)elements
 {
 	self = [super init];

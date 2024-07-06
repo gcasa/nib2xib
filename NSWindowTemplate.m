@@ -108,17 +108,6 @@
     return result;
 }
 
-- (NSMutableDictionary *) frameAttributes
-{
-    NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    [result setObject: [NSString stringWithFormat: @"%g", windowRect.origin.x] forKey: @"x"];
-    [result setObject: [NSString stringWithFormat: @"%g", windowRect.origin.y] forKey: @"y"];
-    [result setObject: [NSString stringWithFormat: @"%g", windowRect.size.width] forKey: @"width"];
-    [result setObject: [NSString stringWithFormat: @"%g", windowRect.size.height] forKey: @"height"];
-    [result setObject: @"contentRect" forKey: @"key"];
-    return result;
-}
-
 - (XMLNode *) toXML
 {
     XMLNode *windowViewXml = [windowView toXML];
@@ -126,9 +115,8 @@
     NSMutableArray *elements = [NSMutableArray arrayWithObject: windowViewXml];
     NSString *name = [windowClass classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
-    XMLNode *frame = [[XMLNode alloc] initWithName: @"rect" value: @"" attributes: [self frameAttributes] elements: nil];
+    XMLNode *frame = [XMLNode nodeForRect: windowRect type: @"contentRect"];
 
-    // [subviewsXml setElements: [NSMutableArray arrayWithObject: windowViewXml]];
     [windowViewXml addAttribute: @"key" value: @"contentView"];
     [node addElement: frame];
     

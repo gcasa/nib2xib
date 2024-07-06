@@ -22,6 +22,7 @@
  */
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSGeometry.h>
 
 @class NSString;
 @class NSMutableArray;
@@ -34,6 +35,8 @@
 	NSMutableDictionary *_attributes;
 	NSMutableArray *_elements;
 }
+
++ (id) nodeForRect: (NSRect)frame type: (NSString *)type;
 
 - (id) initWithName: (NSString *)name;
 - (id) initWithName: (NSString *)name value: (NSString *)value attributes: (NSMutableDictionary *)attributes elements: (NSMutableArray *)elements;

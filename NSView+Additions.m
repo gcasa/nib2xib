@@ -53,17 +53,6 @@
     return result;
 }
 
-- (NSMutableDictionary *) frameAttributes
-{
-    NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    [result setObject: [NSString stringWithFormat: @"%g", [self frame].origin.x] forKey: @"x"];
-    [result setObject: [NSString stringWithFormat: @"%g", [self frame].origin.y] forKey: @"y"];
-    [result setObject: [NSString stringWithFormat: @"%g", [self frame].size.width] forKey: @"width"];
-    [result setObject: [NSString stringWithFormat: @"%g", [self frame].size.height] forKey: @"height"];
-    [result setObject: @"frame" forKey: @"key"];
-    return result;
-}
-
 - (XMLNode *) toXML
 {
     NSMutableDictionary *attributes = [self attributesFromProperties];
@@ -72,7 +61,7 @@
     NSString *className = NSStringFromClass([self class]);    
     NSString *name = [className classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: [NSMutableArray arrayWithObject: subviewsXml]];
-    XMLNode *frame = [[XMLNode alloc] initWithName: @"rect" value: @"" attributes: [self frameAttributes] elements: nil];
+    XMLNode *frame = [XMLNode nodeForRect: [self frame] type: @"frame"];
 
     [node addElement: frame];
 
