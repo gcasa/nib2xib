@@ -148,8 +148,19 @@
 - (NSString *) description
 {
 	NSString *elementsString = [self elementsAsString];
-	NSString *result = [NSString stringWithFormat: @"<%@%@>%@%@</%@>", 
-		_name, [self describeAttributes], _value, elementsString, _name];
+	NSString *result = nil;
+	
+	if ([_elements count] > 0 || (_value != nil || [_value isEqualToString: @""] == NO))
+	{
+		result = [NSString stringWithFormat: @"<%@%@>%@%@</%@>", 
+			_name, [self describeAttributes], _value, elementsString, _name];
+	}
+	else 
+	{
+		result = [NSString stringWithFormat: @"<%@%@ />", 
+			_name, [self describeAttributes]];	
+	}
+
 	return result;
 }
 

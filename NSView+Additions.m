@@ -22,109 +22,50 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
-
-#import "NSWindowTemplate.h"
-
-#import "XMLNode.h"
+#import "NSView+Additions.h"
 #import "NSString+Additions.h"
-@implementation NSWindowTemplate (Methods)
 
-- (int) interfaceStyle
-{
-    return wtFlags.style;
-}
+@implementation NSView (toXML)
 
-- (void) setInterfaceStyle:(int)fp16
+- (NSMutableArray *) subviewsToXml
 {
-    wtFlags.style = fp16;
-}
+    NSMutableArray *array = [NSMutableArray array];
+    NSEnumerator *en = [[self subviews] objectEnumerator];
+    NSView *v = nil;
 
-- (NSRect) windowRect
-{
-    return windowRect;
-}
+    while ((v = [en nextObject]) != nil)
+    {
+        XMLNode *n = [v toXML];
+        [array addObject: n];        
+    }
 
-- (int) windowStyleMask
-{
-    return windowStyleMask;
-}
-
-- (int) windowBacking
-{
-    return windowBacking;
-}
-
-- (NSString *) windowTitle
-{
-    return windowTitle;
-}
-
-- (NSString *) viewClass
-{
-    return viewClass;
-}
-
-- (NSString *) windowClass
-{
-    return windowClass;
-}
-
-- (id) windowView
-{
-    return windowView;
-}
-
-- (id) realObject
-{
-    return realObject;
-}
-
-- (NSSize) minSize
-{
-    return minSize;
-}
-
-- (GSWindowTemplateFlags) wtFlags
-{
-    return wtFlags;
-}
-
-- (NSRect) screenRect
-{
-    return screenRect;
+    return array;
 }
 
 - (NSMutableDictionary *) attributesFromProperties
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-
-    // Title and other string properties...
-    [result setObject: windowTitle forKey: @"title"];
-
-    // Flags...
-    // TODO...
-
+    // TODO
     return result;
 }
 
 - (NSMutableDictionary *) frameAttributes
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    [result setObject: [NSString stringWithFormat: @"%g", windowRect.origin.x] forKey: @"x"];
-    [result setObject: [NSString stringWithFormat: @"%g", windowRect.origin.y] forKey: @"y"];
-    [result setObject: [NSString stringWithFormat: @"%g", windowRect.size.width] forKey: @"width"];
-    [result setObject: [NSString stringWithFormat: @"%g", windowRect.size.height] forKey: @"height"];
-    [result setObject: @"contentRect" forKey: @"key"];
+    [result setObject: [NSString stringWithFormat: @"%g", [self frame].origin.x] forKey: @"x"];
+    [result setObject: [NSString stringWithFormat: @"%g", [self frame].origin.y] forKey: @"y"];
+    [result setObject: [NSString stringWithFormat: @"%g", [self frame].size.width] forKey: @"width"];
+    [result setObject: [NSString stringWithFormat: @"%g", [self frame].size.height] forKey: @"height"];
+    [result setObject: @"frame" forKey: @"key"];
     return result;
 }
 
 - (XMLNode *) toXML
 {
-    XMLNode *windowViewXml = [windowView toXML];
     NSMutableDictionary *attributes = [self attributesFromProperties];
-    NSMutableArray *elements = [NSMutableArray arrayWithObject: windowViewXml];
-    NSString *name = [windowClass classNameToTagName];
+    NSMutableArray *elements = [self subviewsToXml];
+    NSString *className = NSStringFromClass([self class]);    
+    NSString *name = [className classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
     XMLNode *frame = [[XMLNode alloc] initWithName: @"rect" value: @"" attributes: [self frameAttributes] elements: nil];
     [node addElement: frame];
