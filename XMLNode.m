@@ -150,7 +150,7 @@
 	NSString *elementsString = [self elementsAsString];
 	NSString *result = nil;
 	
-	if ([_elements count] > 0 || (_value != nil || [_value isEqualToString: @""] == NO))
+	if ([_elements count] > 0 || [_value isEqualToString: @""] == NO)
 	{
 		result = [NSString stringWithFormat: @"<%@%@>%@%@</%@>", 
 			_name, [self describeAttributes], _value, elementsString, _name];
