@@ -127,7 +127,11 @@
     NSString *name = [windowClass classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
     XMLNode *frame = [[XMLNode alloc] initWithName: @"rect" value: @"" attributes: [self frameAttributes] elements: nil];
+
+    // [subviewsXml setElements: [NSMutableArray arrayWithObject: windowViewXml]];
+    [windowViewXml addAttribute: @"key" value: @"contentView"];
     [node addElement: frame];
+    
     return node;
 }
 

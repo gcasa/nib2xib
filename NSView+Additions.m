@@ -22,6 +22,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#include <objc/objc.h>
 #import "NSView+Additions.h"
 #import "NSString+Additions.h"
 
@@ -45,7 +46,10 @@
 - (NSMutableDictionary *) attributesFromProperties
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    // TODO
+    /*if ([[self window] contentView] == self)
+    {
+        [result setObject: @"contentView" forKey: @"key"];
+    }*/
     return result;
 }
 
@@ -64,11 +68,14 @@
 {
     NSMutableDictionary *attributes = [self attributesFromProperties];
     NSMutableArray *elements = [self subviewsToXml];
+    XMLNode *subviewsXml = [[XMLNode alloc] initWithName: @"subviews" value: @"" attributes: nil elements: elements];
     NSString *className = NSStringFromClass([self class]);    
     NSString *name = [className classNameToTagName];
-    XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
+    XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: [NSMutableArray arrayWithObject: subviewsXml]];
     XMLNode *frame = [[XMLNode alloc] initWithName: @"rect" value: @"" attributes: [self frameAttributes] elements: nil];
+
     [node addElement: frame];
+
     return node;
 }
 

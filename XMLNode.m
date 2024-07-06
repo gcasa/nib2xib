@@ -32,17 +32,24 @@
 	self = [super init];
 	if (self != nil)
 	{
+		NSString *v = @""; //(value == nil ? @"" : value);
+
+		if (value != nil)
+		{
+			v = value;
+		}
+
 		[self setName: name];
 		[self setAttributes: attributes];
 		[self setElements: elements];
-		[self setValue: value];
+		[self setValue: v];
 	}
 	return self;
 }
 
 - (id) initWithName: (NSString *)name
 {
-	return [self initWithName: name value: nil attributes: [NSMutableDictionary dictionary] elements: [NSMutableArray array]];
+	return [self initWithName: name value: @"" attributes: [NSMutableDictionary dictionary] elements: [NSMutableArray array]];
 }
 
 - (void) dealloc
