@@ -124,7 +124,22 @@
 	while ((k = [en nextObject]) != nil)
 	{
 		NSString *v = [_attributes objectForKey: k];
-		result = [result stringByAppendingString: [NSString stringWithFormat: @" %@ = %@", k, v]];
+		result = [result stringByAppendingString: [NSString stringWithFormat: @" %@=\"%@\"", k, v]];
+	}
+
+	return result;
+}
+
+- (NSString *) elementsAsString
+{
+	NSEnumerator *en = [_elements objectEnumerator];
+	XMLNode *n = nil;
+	NSString *result = @"";
+
+	while ((n = [en nextObject]) != nil)
+	{
+		NSString *s = [n description];
+		result = [result stringByAppendingString: s];
 	}
 
 	return result;
@@ -132,8 +147,9 @@
 
 - (NSString *) description
 {
+	NSString *elementsString = [self elementsAsString];
 	NSString *result = [NSString stringWithFormat: @"<%@%@>%@%@</%@>", 
-		_name, [self describeAttributes], _value, _elements, _name];
+		_name, [self describeAttributes], _value, elementsString, _name];
 	return result;
 }
 

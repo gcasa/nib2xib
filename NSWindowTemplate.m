@@ -23,6 +23,7 @@
 
 #import "NSWindowTemplate.h"
 #import "XMLNode.h"
+#import "NSString+Additions.h"
 
 @implementation NSWindowTemplate (Methods)
 
@@ -109,7 +110,9 @@
     XMLNode *windowViewXml = [windowView toXML];
     NSMutableDictionary *attributes = [self attributesFromProperties];
     NSMutableArray *elements = [NSMutableArray arrayWithObject: windowViewXml];
-    XMLNode *node = [[XMLNode alloc] initWithName: @"window" value: @"" attributes: attributes elements: elements];
+    NSString *className = NSStringFromClass([self class]);
+    NSString *name = [className classNameToTagName];
+    XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
 
     return node;
 }
@@ -144,7 +147,9 @@
 {
     NSMutableDictionary *attributes = [self attributesFromProperties];
     NSMutableArray *elements = [self subviewsToXml];
-    XMLNode *node = [[XMLNode alloc] initWithName: @"view" value: @"" attributes: attributes elements: elements];
+    NSString *className = NSStringFromClass([self class]);    
+    NSString *name = [className classNameToTagName];
+    XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
     return node;
 }
 
