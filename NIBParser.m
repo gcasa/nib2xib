@@ -21,6 +21,7 @@
  * USA.
  */
 
+#include <Foundation/Foundation.h>
 #import <Foundation/NSArchiver.h>
 #import <Foundation/NSDictionary.h>
 
@@ -53,6 +54,32 @@
 }
 @end
 
+void PrintMapTable(NSMapTable *mt)
+{
+	NSArray *keys = NSAllMapTableKeys(mt);
+	NSEnumerator *en = [keys objectEnumerator];
+	id k = nil;
+
+	while ((k = [en nextObject]) != nil)
+	{
+		id v = NSMapGet(mt, k);
+		NSLog(@"k = %@, v = %@", k, v);
+	}
+}
+
+void PrintMapTableOids(NSMapTable *mt)
+{
+	NSArray *keys = NSAllMapTableKeys(mt);
+	NSEnumerator *en = [keys objectEnumerator];
+	void *k = NULL;
+
+	while ((k = [en nextObject]) != nil)
+	{
+		void *v = NSMapGet(mt, k);
+		NSLog(@"k = %@, v = %d", k, v);
+	}
+}
+
 @implementation NIBParser
 
 - (id) initWithNibNamed: (NSString *)nibNamed
@@ -63,9 +90,16 @@
 		NSString *objectsNib = [nibNamed stringByAppendingPathComponent: @"objects.nib"];
 		NSString *dataClasses = [nibNamed stringByAppendingPathComponent: @"data.classes"];
 		NSArray *connections = nil;
+		NSMapTable *nameTable = NULL;
+		NSMapTable *oidTable = NULL;
+		NSMapTable *objectTable = NULL;
 
 		_object = [NSUnarchiver unarchiveObjectWithFile: objectsNib];
 		_rootObject = [_object rootObject];
+		
+		nameTable = [_object nameTable];
+		oidTable = [_object oidTable];
+		objectTable = [_object objectTable];
 
 #ifdef DEBUG		
 		connections = [_object connections];
@@ -76,11 +110,20 @@
 
 		_objectsDictionary = [NSMutableDictionary dictionary];
 		_classesDictionary = [NSMutableDictionary dictionaryWithContentsOfClassesFile: dataClasses];
-
+		
 #ifdef DEBUG
 		NSLog(@"_object = %@", _object);
 		NSLog(@"_rootObject = %@", _rootObject);
 		NSLog(@"_classesDictionary = %@", _classesDictionary);
+#endif
+
+#ifdef DEBUG
+		NSLog(@"== nameTable");
+		PrintMapTable(nameTable);
+		NSLog(@"== objectTable");
+		PrintMapTable(objectTable);
+		NSLog(@"== oidTable");
+		PrintMapTableOids(oidTable);
 #endif
 	}
 	return self;
@@ -97,13 +140,11 @@
 	// NSLog(@"\to = %@", o);
 }
 
-
 - (void) handleCustomObject: (NSCustomObject *)o
                     withKey: (NSString *)key
 {
 	NSLog(@"key = %@, o = %@", key, o);
 }
-
 
 - (void) processWindowViews: (NSView *)view level: (int)level
 {
@@ -118,7 +159,6 @@
 	NSLog(@"view = %@, level = %d", view, level);
 
 }
-
 
 - (id) parse
 {
