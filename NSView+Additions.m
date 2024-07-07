@@ -60,7 +60,8 @@
     XMLNode *subviewsXml = [[XMLNode alloc] initWithName: @"subviews" value: @"" attributes: nil elements: elements];
     NSString *className = NSStringFromClass([self class]);    
     NSString *name = [className classNameToTagName];
-    XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: [NSMutableArray arrayWithObject: subviewsXml]];
+    XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes 
+        elements: [[self subviews] count] > 0 ? [NSMutableArray arrayWithObject: subviewsXml] : [NSMutableArray array]];
     XMLNode *frame = [XMLNode nodeForRect: [self frame] type: @"frame"];
 
     [node addElement: frame];
