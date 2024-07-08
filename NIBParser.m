@@ -126,6 +126,7 @@ void PrintMapTableOids(NSMapTable *mt)
 
 - (id) parse
 {
+	XMLDocument *document = [[XMLDocument alloc] initWithName: @"document"];
 	NSMapTable *nameTable = [_object nameTable];
 #ifdef DEBUG	
 	NSArray *values = NSAllMapTableValues(nameTable);
@@ -145,6 +146,7 @@ void PrintMapTableOids(NSMapTable *mt)
 	// Iterate over all objects in the map table...
 	while ((o = [en nextObject]) != nil)
 	{
+		NSString *label = NSMapGet(nameTable, o);
 		if ([o isKindOfClass: [NSWindowTemplate class]])
 		{
 			XMLNode *window = [o toXML];
@@ -153,6 +155,7 @@ void PrintMapTableOids(NSMapTable *mt)
 		else if ([o isKindOfClass: [NSCustomObject class]])
 		{
 			XMLNode *co = [o toXML];
+			[co addAttribute:@"userLabel" value: label];
 			NSLog(@"XML = %@", co);
 		}
 		else if ([o isKindOfClass: [NSMenuTemplate class]])
