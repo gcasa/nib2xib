@@ -47,17 +47,10 @@
 	self = [super init];
 	if (self != nil)
 	{
-		NSString *v = @""; //(value == nil ? @"" : value);
-
-		if (value != nil)
-		{
-			v = value;
-		}
-
 		[self setName: name];
 		[self setAttributes: attributes];
 		[self setElements: elements];
-		[self setValue: v];
+		[self setValue: value];
 	}
 	return self;
 }
@@ -83,6 +76,10 @@
 
 - (void) setName: (NSString *)name
 {
+	if (_name == nil)
+	{
+		_name = @"";
+	}
 	_name = [[name copy] retain];
 }
 
@@ -93,6 +90,10 @@
 
 - (void) setAttributes: (NSMutableDictionary *) attributes
 {
+	if (_attributes == nil)
+	{
+		_attributes = [[NSMutableDictionary alloc] init];
+	}
 	_attributes = [attributes retain];
 }
 
@@ -103,6 +104,10 @@
 
 - (void) setElements: (NSMutableArray *) elements
 {
+	if (_elements == nil)
+	{
+		_elements = [[NSMutableDictionary alloc] init];
+	}
 	_elements = [elements retain];
 }
 
@@ -113,16 +118,28 @@
 
 - (void) setValue: (NSString *)value
 {
+	if (_value == nil)
+	{
+		_value = @"";
+	}
 	_value = [[value copy] retain];
 }
 
 - (void) addElement: (XMLNode *)element
 {
+	if (_elements == nil)
+	{
+		_elements = [[NSMutableDictionary alloc] init];
+	}
 	[_elements addObject: element];
 }
 
 - (void) addAttribute: (NSString *)key value: (NSString *)value
 {
+	if (_attributes == nil)
+	{
+		_attributes = [[NSMutableDictionary alloc] init];
+	}
 	[_attributes setObject: value forKey: key];
 }
 

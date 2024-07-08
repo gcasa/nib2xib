@@ -126,7 +126,10 @@ void PrintMapTableOids(NSMapTable *mt)
 
 - (id) parse
 {
-	XMLDocument *document = [[XMLDocument alloc] initWithName: @"document"];
+	NSArray *os = [NSArray arrayWithObjects: @"com.apple.InterfaceBuilder3.Cocoa.XIB", @"3.0", @"32700.99.1234", @"MacOSX.Cocoa", @"none", @"YES", @"direct", nil];
+	NSArray *ks = [NSArray arrayWithObjects: @"type", @"version", @"toolsVersion", @"targetRuntime", @"propertyAccessControl", @"useAutolayout", @"customObjectInstantiationMethod", nil];
+	NSMutableDictionary *docAttrs = [NSMutableDictionary dictionaryWithObjects: os forKeys: ks];
+	XMLDocument *document = [[XMLDocument alloc] initWithName: @"document" value: nil attributes: docAttrs elements: nil];
 	NSMapTable *nameTable = [_object nameTable];
 #ifdef DEBUG	
 	NSArray *values = NSAllMapTableValues(nameTable);
