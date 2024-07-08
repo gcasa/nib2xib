@@ -21,7 +21,7 @@
  * USA.
  */
 
-#include <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 #import <Foundation/NSArchiver.h>
 #import <Foundation/NSDictionary.h>
 
