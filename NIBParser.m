@@ -34,8 +34,7 @@
 #import "XMLDocument.h"
 #import "XMLNode.h"
 
-#define DEBUG
-
+// #define DEBUG
 @interface NSMutableDictionary (LoadNibFormat)
 + (NSMutableDictionary *) dictionaryWithContentsOfClassesFile: (NSString *)file;
 @end
@@ -45,11 +44,7 @@
 {
 	NSString *fileContents = [NSString stringWithContentsOfFile: file];
 	NSString *string = [NSString stringWithFormat: @"{ %@ }", fileContents];
-	NSDictionary *dict = nil; // [string propertyList];
-
-	// NSLog(@"String = %@", string);
-
-	dict = [string propertyList];
+	NSDictionary *dict = [string propertyList];
 	return [NSMutableDictionary dictionaryWithDictionary: dict];
 }
 @end
@@ -100,9 +95,9 @@ void PrintMapTableOids(NSMapTable *mt)
 		nameTable = [_object nameTable];
 		oidTable = [_object oidTable];
 		objectTable = [_object objectTable];
-
-#ifdef DEBUG		
 		connections = [_object connections];
+
+#ifdef DEBUG
 		NSLog(@"objectsNib = %@", objectsNib);
 		NSLog(@"dataClasses = %@", dataClasses);
 		NSLog(@"connections = %@", connections);
@@ -129,47 +124,20 @@ void PrintMapTableOids(NSMapTable *mt)
 	return self;
 }
 
-- (void) handleMenuObject: (NSMenuTemplate *)mt
-{
-	// id o = [mt nibInstantiate];
-	NSLog(@"\tMenu Title = %@", [mt title]);
-	NSLog(@"\tSupermenu = %@", [mt supermenu]);
-	NSLog(@"\tisWindowsMenu = %d", [mt isWindowsMenu]);
-	NSLog(@"\tisFontMenu = %d", [mt isFontMenu]);
-	NSLog(@"\trealObject = %@", [mt realObject]);
-	// NSLog(@"\to = %@", o);
-}
-
-- (void) handleCustomObject: (NSCustomObject *)o
-                    withKey: (NSString *)key
-{
-	NSLog(@"key = %@, o = %@", key, o);
-}
-
-- (void) processWindowViews: (NSView *)view level: (int)level
-{
-	NSEnumerator *en = [[view subviews] objectEnumerator];
-	id v = nil;
-
-	while((v = [en nextObject]) != nil)
-	{
-		[self processWindowViews: v level: level + 1];
-	}
-
-	NSLog(@"view = %@, level = %d", view, level);
-
-}
-
 - (id) parse
 {
 	NSMapTable *nameTable = [_object nameTable];
+#ifdef DEBUG	
 	NSArray *values = NSAllMapTableValues(nameTable);
+#endif
 	NSArray *keys = NSAllMapTableKeys(nameTable);
 	NSEnumerator *en = [keys objectEnumerator];
 	id o = nil;
 
+#ifdef DEBUG
 	NSLog(@"values = %@", values);
 	NSLog(@"keys = %@", keys);
+#endif
 
 	// Create the root entry...
 	[_objectsDictionary setObject: [NSMutableDictionary dictionary]	forKey: @"objects"];
@@ -177,25 +145,19 @@ void PrintMapTableOids(NSMapTable *mt)
 	// Iterate over all objects in the map table...
 	while ((o = [en nextObject]) != nil)
 	{
-		NSString *key = NSMapGet(nameTable, o);
-
 		if ([o isKindOfClass: [NSWindowTemplate class]])
 		{
-			XMLNode *xml = [o toXML];
-			NSView *windowView = [o windowView];
-
-			NSLog(@"XML = %@", xml);
-			NSLog(@"Window Title = %@", [o windowTitle]);
-			NSLog(@"Window View = %@", windowView);
-			[self processWindowViews: windowView level: 0];
+			XMLNode *window = [o toXML];
+			NSLog(@"XML = %@", window);
 		}
 		else if ([o isKindOfClass: [NSCustomObject class]])
 		{
-			[self handleCustomObject: o withKey: key];
+			XMLNode *co = [o toXML];
+			NSLog(@"XML = %@", co);
 		}
 		else if ([o isKindOfClass: [NSMenuTemplate class]])
 		{
-			[self handleMenuObject: o];
+			// [self handleMenuObject: o];
 		}
 		else
 		{

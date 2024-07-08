@@ -24,6 +24,8 @@
 #import <AppKit/AppKit.h>
 #import "NIBParser.h"
 
+static NIBParser *_globalParser = nil;
+
 int main(int argc, const char *argv[]) 
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -35,6 +37,7 @@ int main(int argc, const char *argv[])
     NIBParser *parser = [[NIBParser alloc] initWithNibNamed: nibName];
     id output = [parser parse];
 
+    _globalParser = parser;
     NSLog(@"--- Output");
     NSLog(@"parser = %@", parser);
     NSLog(@"output = %@", output);
