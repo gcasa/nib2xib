@@ -45,10 +45,4 @@
 	return _header;
 }
 
-- (NSString *) description
-{
-	NSString *result = [NSString stringWithFormat: @"%@%@", _header, [self elements]];
-	return result;
-}
-
 @end

@@ -107,7 +107,7 @@
 {
 	if (_elements == nil)
 	{
-		_elements = [[NSMutableDictionary alloc] init];
+		_elements = [[NSMutableArray alloc] init];
 	}
 	_elements = [elements retain];
 }
@@ -130,7 +130,7 @@
 {
 	if (_elements == nil)
 	{
-		_elements = [[NSMutableDictionary alloc] init];
+		_elements = [[NSMutableArray alloc] init];
 	}
 	[_elements addObject: element];
 }

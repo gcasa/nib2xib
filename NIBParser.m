@@ -145,6 +145,7 @@ void PrintMapTableOids(NSMapTable *mt)
 #endif
 	NSArray *keys = NSAllMapTableKeys(nameTable);
 	NSEnumerator *en = [keys objectEnumerator];
+	XMLNode *objects = [[XMLNode alloc] initWithName: @"objects"];
 	id o = nil;
 
 #ifdef DEBUG
@@ -152,8 +153,8 @@ void PrintMapTableOids(NSMapTable *mt)
 	NSLog(@"keys = %@", keys);
 #endif
 
-	// Create the root entry...
-	[_objectsDictionary setObject: [NSMutableDictionary dictionary]	forKey: @"objects"];
+	// Create objects element...
+	[document addElement: objects];
 
 	// Iterate over all objects in the map table...
 	while ((o = [en nextObject]) != nil)
@@ -162,13 +163,15 @@ void PrintMapTableOids(NSMapTable *mt)
 		if ([o isKindOfClass: [NSWindowTemplate class]])
 		{
 			XMLNode *window = [o toXMLWithParser: self];
-			NSLog(@"XML = %@", window);
+			// NSLog(@"XML = %@", window);
+			[objects addElement: window];
 		}
 		else if ([o isKindOfClass: [NSCustomObject class]])
 		{
 			XMLNode *co = [o toXMLWithParser: self];
 			[co addAttribute:@"userLabel" value: label];
-			NSLog(@"XML = %@", co);
+			// NSLog(@"XML = %@", co)
+			[objects addElement: co];
 		}
 		else if ([o isKindOfClass: [NSMenuTemplate class]])
 		{
@@ -180,7 +183,7 @@ void PrintMapTableOids(NSMapTable *mt)
 		}
 	}
 
-	return nil;
+	return document;
 }
 
 @end
