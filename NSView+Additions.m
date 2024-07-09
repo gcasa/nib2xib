@@ -63,7 +63,9 @@
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes 
         elements: [[self subviews] count] > 0 ? [NSMutableArray arrayWithObject: subviewsXml] : [NSMutableArray array]];
     XMLNode *frame = [XMLNode nodeForRect: [self frame] type: @"frame"];
+    NSNumber *oid = [parser oidForObject: self];
 
+    [node addAttribute: @"id" value: [NSString stringWithFormat: @"%@", oid]];
     [node addElement: frame];
 
     return node;

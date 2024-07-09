@@ -116,7 +116,9 @@
     NSString *name = [windowClass classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
     XMLNode *frame = [XMLNode nodeForRect: windowRect type: @"contentRect"];
+    NSNumber *oid = [parser oidForObject: self];
 
+    [node addAttribute: @"id" value: [NSString stringWithFormat: @"%@", oid]];
     [windowViewXml addAttribute: @"key" value: @"contentView"];
     [node addElement: frame];
     
