@@ -22,6 +22,7 @@
  */
 
 #import <Foundation/NSObject.h>
+#import "XMLParsing.h"
 
 @class NSString;
 
@@ -33,7 +34,7 @@
 }
 @end
 
-@interface NSCustomObject (Methods)
+@interface NSCustomObject (Methods) <XMLParsing>
 
 - (NSString *) className;
 - (id) realObject;

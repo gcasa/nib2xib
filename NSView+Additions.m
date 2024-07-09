@@ -22,13 +22,13 @@
  */
 
 #import <Foundation/Foundation.h>
-#include <objc/objc.h>
 #import "NSView+Additions.h"
 #import "NSString+Additions.h"
+#import "NIBParser.h"
 
 @implementation NSView (toXML)
 
-- (NSMutableArray *) subviewsToXml
+- (NSMutableArray *) subviewsToXml: (id<OidProvider>) parser
 {
     NSMutableArray *array = [NSMutableArray array];
     NSEnumerator *en = [[self subviews] objectEnumerator];
@@ -36,7 +36,7 @@
 
     while ((v = [en nextObject]) != nil)
     {
-        XMLNode *n = [v toXML];
+        XMLNode *n = [v toXMLWithParser: parser];
         [array addObject: n];        
     }
 
@@ -53,10 +53,10 @@
     return result;
 }
 
-- (XMLNode *) toXML
+- (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
 {
     NSMutableDictionary *attributes = [self attributesFromProperties];
-    NSMutableArray *elements = [self subviewsToXml];
+    NSMutableArray *elements = [self subviewsToXml: parser];
     XMLNode *subviewsXml = [[XMLNode alloc] initWithName: @"subviews" value: @"" attributes: nil elements: elements];
     NSString *className = NSStringFromClass([self class]);    
     NSString *name = [className classNameToTagName];
@@ -73,9 +73,9 @@
 
 @implementation NSButton (toXML)
 
-- (XMLNode *) toXML
+- (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
 {
-    XMLNode *node = [super toXML];
+    XMLNode *node = [super toXMLWithParser: parser];
     [node addAttribute: @"title" value: [self title]];
     return node;
 }
@@ -84,9 +84,9 @@
 
 @implementation NSTextField (toXML)
 
-- (XMLNode *) toXML
+- (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
 {
-    XMLNode *node = [super toXML];
+    XMLNode *node = [super toXMLWithParser: parser];
     // [node addAttribute: @"title" value: [self stringValue]];
     return node;
 }

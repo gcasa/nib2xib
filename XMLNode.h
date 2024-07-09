@@ -27,6 +27,7 @@
 @class NSString;
 @class NSMutableArray;
 @class NSMutableDictionary;
+@class XIBParser;
 
 @interface XMLNode : NSObject <NSCopying>
 {
@@ -34,6 +35,7 @@
 	NSString *_value;
 	NSMutableDictionary *_attributes;
 	NSMutableArray *_elements;
+	XIBParser *_parser;
 }
 
 + (id) nodeForRect: (NSRect)frame type: (NSString *)type;

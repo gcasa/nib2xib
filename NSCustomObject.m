@@ -58,7 +58,7 @@
     return dict;
 }
 
-- (XMLNode *) toXML
+- (XMLNode *) toXMLWithParser: (id<OidProvider>) parser 
 {
     NSString *cn = NSStringFromClass([self class]);
     NSString *tagName = [cn classNameToTagName];

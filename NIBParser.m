@@ -35,6 +35,9 @@
 #import "XMLNode.h"
 
 // #define DEBUG
+
+// const NIBParser *_globalParser;
+
 @interface NSMutableDictionary (LoadNibFormat)
 + (NSMutableDictionary *) dictionaryWithContentsOfClassesFile: (NSString *)file;
 @end
@@ -84,19 +87,19 @@ void PrintMapTableOids(NSMapTable *mt)
 	{
 		NSString *objectsNib = [nibNamed stringByAppendingPathComponent: @"objects.nib"];
 		NSString *dataClasses = [nibNamed stringByAppendingPathComponent: @"data.classes"];
-		NSArray *connections = nil;
-		NSMapTable *nameTable = NULL;
-		NSMapTable *oidTable = NULL;
-		NSMapTable *objectTable = NULL;
+		
+		_nameTable = NULL;
+		_oidTable = NULL;
+		_objectTable = NULL;
 
 		_object = [NSUnarchiver unarchiveObjectWithFile: objectsNib];
 		_rootObject = [_object rootObject];
 		
-		nameTable = [_object nameTable];
-		oidTable = [_object oidTable];
-		objectTable = [_object objectTable];
-		connections = [_object connections];
-
+		_nameTable = [_object nameTable];
+		_oidTable = [_object oidTable];
+		_objectTable = [_object objectTable];
+		_connections = [_object connections];
+		
 #ifdef DEBUG
 		NSLog(@"objectsNib = %@", objectsNib);
 		NSLog(@"dataClasses = %@", dataClasses);
@@ -122,6 +125,12 @@ void PrintMapTableOids(NSMapTable *mt)
 #endif
 	}
 	return self;
+}
+
+- (NSNumber *) oidForObject: (id)obj
+{
+	int k = (int)NSMapGet(_oidTable, obj);
+	return [NSNumber numberWithInt: k];
 }
 
 - (id) parse
@@ -152,12 +161,12 @@ void PrintMapTableOids(NSMapTable *mt)
 		NSString *label = NSMapGet(nameTable, o);
 		if ([o isKindOfClass: [NSWindowTemplate class]])
 		{
-			XMLNode *window = [o toXML];
+			XMLNode *window = [o toXMLWithParser: self];
 			NSLog(@"XML = %@", window);
 		}
 		else if ([o isKindOfClass: [NSCustomObject class]])
 		{
-			XMLNode *co = [o toXML];
+			XMLNode *co = [o toXMLWithParser: self];
 			[co addAttribute:@"userLabel" value: label];
 			NSLog(@"XML = %@", co);
 		}

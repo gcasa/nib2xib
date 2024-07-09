@@ -21,19 +21,25 @@
  * USA.
  */
 
-#import <Foundation/NSObject.h>
+#import <Foundation/Foundation.h>
+#import "OidProvider.h"
 
 @class NSDictionary;
 @class NSMutableDictionary;
+@class NSMutableArray;
 @class NSString;
 @class XMLDocument;
 
-@interface NIBParser : NSObject
+@interface NIBParser : NSObject <OidProvider>
 {
 	NSMutableDictionary *_objectsDictionary;
 	NSMutableDictionary *_classesDictionary;
+	NSArray *_connections;
 	id _object;
 	id _rootObject;
+	NSMapTable *_oidTable;
+	NSMapTable *_nameTable;
+	NSMapTable *_objectTable;
 
 	XMLDocument *_document;
 }

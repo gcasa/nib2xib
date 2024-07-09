@@ -23,6 +23,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "NIBParser.h"
 #import "XMLNode.h"
 
 @implementation XMLNode

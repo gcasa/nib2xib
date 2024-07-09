@@ -19,7 +19,8 @@ CLASSES = NIBParser.m NSIBObjectData.m XMLDocument.m XMLElement.m XMLNode.m\
 
 HFILES = NIBParser.h NSClassSwapper.h NSIBObjectData.h XMLDocument.h\
          XMLElement.h XMLNode.h NSWindowTemplate.h NSCustomObject.h\
-         NSMenuTemplate.h, NSString+Additions.h, NSView+Additions.h
+         NSMenuTemplate.h, NSString+Additions.h, NSView+Additions.h\
+         OidProvider.h XMLParsing.h
 
 MFILES = nib2xib_main.m
 

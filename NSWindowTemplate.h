@@ -24,6 +24,8 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
+#import "XMLParsing.h"
+
 @class XMLNode;
 
 typedef struct _GSWindowTemplateFlags
@@ -45,7 +47,7 @@ typedef struct _GSWindowTemplateFlags
 } GSWindowTemplateFlags;
 
 
-@interface NSWindowTemplate : NSObject 
+@interface NSWindowTemplate : NSObject
 {
     NSRect windowRect;
     int windowStyleMask;
@@ -62,11 +64,11 @@ typedef struct _GSWindowTemplateFlags
 }
 @end
 
-@interface NSView (toXML)
+@interface NSView (toXML) <XMLParsing>
 - (XMLNode *) toXML;
 @end
 
-@interface NSWindowTemplate (Methods)
+@interface NSWindowTemplate (Methods) <XMLParsing>
 
 - (int) interfaceStyle;
 - (void) setInterfaceStyle:(int)fp16;
@@ -82,6 +84,5 @@ typedef struct _GSWindowTemplateFlags
 - (NSSize) minSize;
 - (GSWindowTemplateFlags) wtFlags;
 - (NSRect) screenRect;
-- (XMLNode *) toXML;
 
 @end

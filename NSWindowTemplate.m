@@ -108,9 +108,9 @@
     return result;
 }
 
-- (XMLNode *) toXML
+- (XMLNode *) toXMLWithParser:(id<OidProvider>)parser 
 {
-    XMLNode *windowViewXml = [windowView toXML];
+    XMLNode *windowViewXml = [windowView toXMLWithParser: parser];
     NSMutableDictionary *attributes = [self attributesFromProperties];
     NSMutableArray *elements = [NSMutableArray arrayWithObject: windowViewXml];
     NSString *name = [windowClass classNameToTagName];

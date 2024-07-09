@@ -15,7 +15,9 @@
             NSMenuTemplate.h,
             NSCustomObject.h,
             NSString+Additions.h,
-            NSView+Additions.h
+            NSView+Additions.h,
+            OidProvider.h,
+            XMLParsing.h
         ); 
         INTERFACES = (NEXTSTEP_nib2xib.nib, WINDOWS_nib2xib.nib); 
         OTHER_LINKED = (nib2xib_main.m); 

@@ -24,7 +24,7 @@
 #import <AppKit/AppKit.h>
 #import "NIBParser.h"
 
-static NIBParser *_globalParser = nil;
+extern NIBParser *_globalParser;
 
 int main(int argc, const char *argv[]) 
 {
@@ -37,7 +37,6 @@ int main(int argc, const char *argv[])
     NIBParser *parser = [[NIBParser alloc] initWithNibNamed: nibName];
     id output = [parser parse];
 
-    _globalParser = parser;
     NSLog(@"--- Output");
     NSLog(@"parser = %@", parser);
     NSLog(@"output = %@", output);
