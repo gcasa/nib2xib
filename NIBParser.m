@@ -145,6 +145,10 @@ void PrintMapTableOids(NSMapTable *mt)
 #endif
 	NSArray *keys = NSAllMapTableKeys(nameTable);
 	NSEnumerator *en = [keys objectEnumerator];
+	XMLNode *dependencies = [[XMLNode alloc] initWithName: @"dependencies"];
+	XMLNode *deployment = [[XMLNode alloc] initWithName: @"deployment"];
+	XMLNode *plugIn = [[XMLNode alloc] initWithName: @"plugIn"];
+	XMLNode *capability = [[XMLNode alloc] initWithName: @"capability"];
 	XMLNode *objects = [[XMLNode alloc] initWithName: @"objects"];
 	id o = nil;
 
@@ -154,6 +158,15 @@ void PrintMapTableOids(NSMapTable *mt)
 #endif
 
 	// Create objects element...
+	[deployment addAttribute: @"identifier" value: @"macosx"];
+	[plugIn addAttribute: @"identifier" value: @"com.apple.InterfaceBuilder.CocoaPlugin"];
+	[plugIn addAttribute: @"version" value: @"22690"];
+	[capability addAttribute: @"name" value: @"documents saved in the Xcode 8 format"];
+	[capability addAttribute: @"minToolsVersion" value: @"8.0"];
+	[dependencies addElement: deployment];
+	[dependencies addElement: plugIn];
+	[dependencies addElement: capability];
+	[document addElement: dependencies];
 	[document addElement: objects];
 
 	// Iterate over all objects in the map table...
