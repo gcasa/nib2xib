@@ -113,11 +113,12 @@
     XMLNode *windowViewXml = [windowView toXMLWithParser: parser];
     NSMutableDictionary *attributes = [self attributesFromProperties];
     NSMutableArray *elements = [NSMutableArray arrayWithObject: windowViewXml];
-    NSString *name = [windowClass classNameToTagName];
+    NSString *name = @"window"; // [windowClass classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
     XMLNode *frame = [XMLNode nodeForRect: windowRect type: @"contentRect"];
     NSNumber *oid = [parser oidForObject: self];
 
+    [node addAttribute: @"customClass" value: windowClass];
     [node addAttribute: @"id" value: [NSString stringWithFormat: @"%@", oid]];
     [windowViewXml addAttribute: @"key" value: @"contentView"];
     [node addElement: frame];

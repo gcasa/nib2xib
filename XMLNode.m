@@ -190,14 +190,14 @@
 	NSString *elementsString = [self elementsAsString];
 	NSString *result = nil;
 	
-	if ([_elements count] > 0 || [_value isEqualToString: @""] == NO)
+	if ([_elements count] > 0 || ([_value isEqualToString: @""] == NO && _value != nil))
 	{
 		result = [NSString stringWithFormat: @"<%@%@>%@%@</%@>", 
 			_name, [self describeAttributes], _value, elementsString, _name];
 	}
 	else 
 	{
-		result = [NSString stringWithFormat: @"<%@%@ />", 
+		result = [NSString stringWithFormat: @"<%@%@/>", 
 			_name, [self describeAttributes]];	
 	}
 
