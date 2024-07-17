@@ -21,10 +21,11 @@
  * USA.
  */
 
+#import <objc/objc.h>
 #import <AppKit/AppKit.h>
-#import "NIBParser.h"
+#import <Foundation/Foundation.h>
 
-extern NIBParser *_globalParser;
+#import "NIBParser.h"
 
 int main(int argc, const char *argv[]) 
 {
@@ -34,12 +35,23 @@ int main(int argc, const char *argv[])
   if (argc > 1)
   {
     NSString *nibName = [NSString stringWithCString: argv[1]];
+    NSString *outputFileName = [NSString stringWithCString: argv[2]];
     NIBParser *parser = [[NIBParser alloc] initWithNibNamed: nibName];
     id output = [parser parse];
+    NSString *outputXML = nil;
+    BOOL f = NO;
 
     NSLog(@"--- Output");
     NSLog(@"parser = %@", parser);
     NSLog(@"output = %@", output);
+
+    outputXML = [output description];
+    f = [outputXML writeToFile: outputFileName 
+                    atomically: YES];
+    if (f == NO)
+    {
+      NSLog(@"Could not write file %@", outputFileName);
+    }
   }
 
   [pool release];
