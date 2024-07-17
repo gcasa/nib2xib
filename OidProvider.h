@@ -1,9 +1,9 @@
 #import <Foundation/NSObject.h>
 
-@class NSNumber;
+@class NSString;
 
 @protocol OidProvider
 
-- (NSNumber *) oidForObject: (id)obj;
+- (NSString *) oidForObject: (id)obj;
 
 @end

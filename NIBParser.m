@@ -127,10 +127,15 @@ void PrintMapTableOids(NSMapTable *mt)
 	return self;
 }
 
-- (NSNumber *) oidForObject: (id)obj
+- (NSString *) oidForObject: (id)obj
 {
 	int k = (int)NSMapGet(_oidTable, obj);
-	return [NSNumber numberWithInt: k];
+	int n = INT_MAX - k;
+	NSString *result = [NSString stringWithFormat: @"%08x", n];
+	NSString *first = [result substringWithRange: NSMakeRange(0, 3)];
+	NSString *middle = [result substringWithRange: NSMakeRange(3, 2)];
+	NSString *last = [result substringWithRange: NSMakeRange(5, 3)];
+	return [NSString stringWithFormat: @"%@-%@-%@", first, middle, last];
 }
 
 - (id) parse
