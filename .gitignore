@@ -4,3 +4,4 @@
 obj-*-opt
 nib2xib
 ._.gitignore
+*.xib
