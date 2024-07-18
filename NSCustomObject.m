@@ -64,6 +64,9 @@
     NSString *tagName = [cn classNameToTagName];
     NSMutableDictionary *attrs = [self attributesFromProperties];
     XMLNode *node = [[XMLNode alloc] initWithName: tagName value: @"" attributes: attrs elements: [NSMutableArray array]];
+    NSString *oid = [parser oidForObject: self];
+    [node addAttribute: @"id" value: oid];
+
     return node;
 }
 @end

@@ -52,6 +52,7 @@
 		[self setAttributes: attributes];
 		[self setElements: elements];
 		[self setValue: value];
+		[self setParent: nil];
 	}
 	return self;
 }
@@ -202,12 +203,12 @@
 	
 	if ([_elements count] > 0 || ([_value isEqualToString: @""] == NO && _value != nil))
 	{
-		result = [NSString stringWithFormat: @"<%@%@>%@%@</%@>", 
+		result = [NSString stringWithFormat: @"<%@%@>%@%@</%@>\n", 
 			_name, [self describeAttributes], _value, elementsString, _name];
 	}
 	else 
 	{
-		result = [NSString stringWithFormat: @"<%@%@/>", 
+		result = [NSString stringWithFormat: @"<%@%@/>\n", 
 			_name, [self describeAttributes]];	
 	}
 
