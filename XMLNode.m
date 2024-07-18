@@ -109,17 +109,16 @@
 {
 	if (_elements == nil)
 	{
-		_elements = [[NSMutableArray alloc] init];
+		_elements = [NSMutableArray array];
 	}
 	else 
 	{
-		NSEnumerator *en = nil;
+		NSEnumerator *en = [_elements objectEnumerator];
 		id e = nil;
 		
-		en = [_elements objectEnumerator];
 		while ((e = [en nextObject]) != nil)
 		{
-			[e setParent: self];
+			[self addElement: e];
 		}
 	}
 	_elements = [elements retain];
@@ -227,7 +226,7 @@
 {
 	int level = [self level];
 	int i = 0;
-	NSString *result = @"";
+	NSString *result = @"\n";
 
 	for (i = 0; i < level; i++)
 	{
@@ -245,12 +244,12 @@
 
 	if ([_elements count] > 0 || ([_value isEqualToString: @""] == NO && _value != nil))
 	{
-		result = [NSString stringWithFormat: @"\n%@<%@%@>%@%@</%@>\n", 
+		result = [NSString stringWithFormat: @"%@<%@%@>%@%@</%@>", 
 			levelString, _name, [self describeAttributes], _value, elementsString, _name];
 	}
 	else 
 	{
-		result = [NSString stringWithFormat: @"\n%@<%@%@/>\n",
+		result = [NSString stringWithFormat: @"%@<%@%@/>",
 			levelString, _name, [self describeAttributes]];	
 	}
 
