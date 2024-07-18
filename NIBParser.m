@@ -34,10 +34,7 @@
 #import "XMLDocument.h"
 #import "XMLNode.h"
 
-// #define DEBUG
-
-// const NIBParser *_globalParser;
-
+#define DEBUG
 @interface NSMutableDictionary (LoadNibFormat)
 + (NSMutableDictionary *) dictionaryWithContentsOfClassesFile: (NSString *)file;
 @end
@@ -103,7 +100,7 @@ void PrintMapTableOids(NSMapTable *mt)
 #ifdef DEBUG
 		NSLog(@"objectsNib = %@", objectsNib);
 		NSLog(@"dataClasses = %@", dataClasses);
-		NSLog(@"connections = %@", connections);
+		NSLog(@"connections = %@", _connections);
 #endif
 
 		_objectsDictionary = [NSMutableDictionary dictionary];
@@ -117,11 +114,11 @@ void PrintMapTableOids(NSMapTable *mt)
 
 #ifdef DEBUG
 		NSLog(@"== nameTable");
-		PrintMapTable(nameTable);
+		PrintMapTable(_nameTable);
 		NSLog(@"== objectTable");
-		PrintMapTable(objectTable);
+		PrintMapTable(_objectTable);
 		NSLog(@"== oidTable");
-		PrintMapTableOids(oidTable);
+		PrintMapTableOids(_oidTable);
 #endif
 	}
 	return self;

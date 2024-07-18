@@ -35,6 +35,8 @@
 	NSString *_value;
 	NSMutableDictionary *_attributes;
 	NSMutableArray *_elements;
+
+	XMLNode *_parent;
 	XIBParser *_parser;
 }
 
@@ -54,6 +56,9 @@
 
 - (NSString *) value;
 - (void) setValue: (NSString *)value;
+
+- (XMLNode *) parent;
+- (void) setParent: (XMLNode *)parent;
 
 - (void) addElement: (XMLNode *)element;
 - (void) addAttribute: (NSString *)key value: (NSString *)value;

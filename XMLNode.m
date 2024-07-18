@@ -126,6 +126,16 @@
 	_value = [[value copy] retain];
 }
 
+- (XMLNode *) parent
+{
+	return _parent;
+}
+
+- (void) setParent: (XMLNode *)parent
+{
+	_parent = [parent retain];
+}
+
 - (void) addElement: (XMLNode *)element
 {
 	if (_elements == nil)
