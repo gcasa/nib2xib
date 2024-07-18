@@ -74,6 +74,7 @@
 
 @end
 
+/*
 @implementation NSButton (toXML)
 
 - (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
@@ -84,7 +85,9 @@
 }
 
 @end
+*/
 
+/*
 @implementation NSTextField (toXML)
 
 - (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
@@ -93,5 +96,4 @@
     // [node addAttribute: @"title" value: [self stringValue]];
     return node;
 }
-
-@end
+*/

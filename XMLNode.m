@@ -52,7 +52,7 @@
 		[self setAttributes: attributes];
 		[self setElements: elements];
 		[self setValue: value];
-		[self setParent: nil];
+		// [self setParent: nil];
 	}
 	return self;
 }
@@ -68,6 +68,7 @@
 	[_attributes release];
 	[_elements release];
 	[_value release];
+	[_parent release];
 	[super dealloc];
 }
 
@@ -110,6 +111,17 @@
 	{
 		_elements = [[NSMutableArray alloc] init];
 	}
+	else 
+	{
+		NSEnumerator *en = nil;
+		id e = nil;
+		
+		en = [_elements objectEnumerator];
+		while ((e = [en nextObject]) != nil)
+		{
+			[e setParent: self];
+		}
+	}
 	_elements = [elements retain];
 }
 
@@ -144,6 +156,7 @@
 		_elements = [[NSMutableArray alloc] init];
 	}
 	[_elements addObject: element];
+	[element setParent: self];
 }
 
 - (void) addAttribute: (NSString *)key value: (NSString *)value
@@ -232,12 +245,12 @@
 
 	if ([_elements count] > 0 || ([_value isEqualToString: @""] == NO && _value != nil))
 	{
-		result = [NSString stringWithFormat: @"%@<%@%@>%@%@</%@>\n", 
+		result = [NSString stringWithFormat: @"\n%@<%@%@>%@%@</%@>\n", 
 			levelString, _name, [self describeAttributes], _value, elementsString, _name];
 	}
 	else 
 	{
-		result = [NSString stringWithFormat: @"%@<%@%@/>\n",
+		result = [NSString stringWithFormat: @"\n%@<%@%@/>\n",
 			levelString, _name, [self describeAttributes]];	
 	}
 
