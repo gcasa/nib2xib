@@ -108,7 +108,7 @@
     return result;
 }
 
-- (XMLNode *) toXMLWithParser:(id<OidProvider>)parser 
+- (XMLNode *) toXMLWithParser: (id<OidProvider>)parser 
 {
     XMLNode *windowViewXml = [windowView toXMLWithParser: parser];
     NSMutableDictionary *attributes = [self attributesFromProperties];
@@ -116,10 +116,11 @@
     NSString *name = @"window"; // [windowClass classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: elements];
     XMLNode *frame = [XMLNode nodeForRect: windowRect type: @"contentRect"];
-    NSNumber *oid = [parser oidForObject: self];
+    NSString *oid = [parser oidForObject: self];
 
+    [windowViewXml setParent: node];
     [node addAttribute: @"customClass" value: windowClass];
-    [node addAttribute: @"id" value: [NSString stringWithFormat: @"%@", oid]];
+    [node addAttribute: @"id" value: oid];
     [windowViewXml addAttribute: @"key" value: @"contentView"];
     [node addElement: frame];
     

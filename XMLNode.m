@@ -196,20 +196,49 @@
 	return result;
 }
 
+- (int) level
+{
+	int result = 0;
+	XMLNode *node = [self parent];
+
+	while (node != nil)
+	{
+		result++;
+		node = [node parent]; 
+	}
+
+	return result;
+}
+
+- (NSString *) levelString
+{
+	int level = [self level];
+	int i = 0;
+	NSString *result = @"";
+
+	for (i = 0; i < level; i++)
+	{
+		result = [result stringByAppendingString: @"    "];
+	}
+
+	return result;
+}
+
 - (NSString *) description
 {
 	NSString *elementsString = [self elementsAsString];
 	NSString *result = nil;
-	
+	NSString *levelString = [self levelString];
+
 	if ([_elements count] > 0 || ([_value isEqualToString: @""] == NO && _value != nil))
 	{
-		result = [NSString stringWithFormat: @"<%@%@>%@%@</%@>\n", 
-			_name, [self describeAttributes], _value, elementsString, _name];
+		result = [NSString stringWithFormat: @"%@<%@%@>%@%@</%@>\n", 
+			levelString, _name, [self describeAttributes], _value, elementsString, _name];
 	}
 	else 
 	{
-		result = [NSString stringWithFormat: @"<%@%@/>\n", 
-			_name, [self describeAttributes]];	
+		result = [NSString stringWithFormat: @"%@<%@%@/>\n",
+			levelString, _name, [self describeAttributes]];	
 	}
 
 	return result;

@@ -65,6 +65,7 @@
     XMLNode *frame = [XMLNode nodeForRect: [self frame] type: @"frame"];
     NSString *oid = [parser oidForObject: self];
 
+    [subviewsXml setParent: node];
     [node addAttribute: @"id" value: oid];
     [node addElement: frame];
 

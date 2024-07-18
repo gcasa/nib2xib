@@ -34,7 +34,8 @@
 #import "XMLDocument.h"
 #import "XMLNode.h"
 
-#define DEBUG
+// #define DEBUG
+
 @interface NSMutableDictionary (LoadNibFormat)
 + (NSMutableDictionary *) dictionaryWithContentsOfClassesFile: (NSString *)file;
 @end
@@ -179,14 +180,16 @@ void PrintMapTableOids(NSMapTable *mt)
 		if ([o isKindOfClass: [NSWindowTemplate class]])
 		{
 			XMLNode *window = [o toXMLWithParser: self];
-			// NSLog(@"XML = %@", window);
+
+			[window setParent: objects];
 			[objects addElement: window];
 		}
 		else if ([o isKindOfClass: [NSCustomObject class]])
 		{
 			XMLNode *co = [o toXMLWithParser: self];
+
 			[co addAttribute:@"userLabel" value: label];
-			// NSLog(@"XML = %@", co)
+			[co setParent: objects];
 			[objects addElement: co];
 		}
 		else if ([o isKindOfClass: [NSMenuTemplate class]])
