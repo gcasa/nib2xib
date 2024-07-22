@@ -46,10 +46,12 @@
 - (NSMutableDictionary *) attributesFromProperties
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    /*if ([[self window] contentView] == self)
+    /*
+    if ([[self window] contentView] == self)
     {
         [result setObject: @"contentView" forKey: @"key"];
-    }*/
+    }
+    */
     return result;
 }
 
@@ -65,7 +67,7 @@
     XMLNode *frame = [XMLNode nodeForRect: [self frame] type: @"frame"];
     NSString *oid = [parser oidForObject: self];
 
-    [subviewsXml setParent: node];
+    // [subviewsXml setParent: node];
     [node addAttribute: @"id" value: oid];
     [node addElement: frame];
 

@@ -226,7 +226,12 @@
 {
 	int level = [self level];
 	int i = 0;
-	NSString *result = @"\n";
+	NSString *result = @"";
+
+	if (level > 0)
+	{
+		result = @"\n";
+	}
 
 	for (i = 0; i < level; i++)
 	{
@@ -244,8 +249,8 @@
 
 	if ([_elements count] > 0 || ([_value isEqualToString: @""] == NO && _value != nil))
 	{
-		result = [NSString stringWithFormat: @"%@<%@%@>%@%@</%@>", 
-			levelString, _name, [self describeAttributes], _value, elementsString, _name];
+		result = [NSString stringWithFormat: @"%@<%@%@>%@%@%@</%@>", 
+			levelString, _name, [self describeAttributes], _value, elementsString, levelString, _name];
 	}
 	else 
 	{
