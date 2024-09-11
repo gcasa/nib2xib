@@ -43,7 +43,7 @@ int main(int argc, const char *argv[])
 
     NSLog(@"--- Output");
     NSLog(@"parser = %@", parser);
-    NSLog(@"output = %@", output);
+    NSLog(@"output = \n%@", output);
 
     outputXML = [output description];
     f = [outputXML writeToFile: outputFileName 

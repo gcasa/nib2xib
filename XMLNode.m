@@ -48,11 +48,22 @@
 	self = [super init];
 	if (self != nil)
 	{
+		NSEnumerator *en = nil;
+		id e = nil;
+
 		[self setName: name];
 		[self setAttributes: attributes];
-		[self setElements: elements];
 		[self setValue: value];
-		// [self setParent: nil];
+		
+		if (elements == nil)
+		{
+			elements = [[NSMutableArray alloc] init];
+		}
+
+		while ((e = [en nextObject]) != nil)
+		{
+			[self addElement: e];
+		}
 	}
 	return self;
 }
@@ -107,20 +118,19 @@
 
 - (void) setElements: (NSMutableArray *) elements
 {
-	if (_elements == nil)
+	NSEnumerator *en = nil;
+	id e = nil;
+
+	if (elements == nil)
 	{
-		_elements = [NSMutableArray array];
+		elements = [[NSMutableArray alloc] init];
 	}
-	else 
+
+	while ((e = [en nextObject]) != nil)
 	{
-		NSEnumerator *en = [_elements objectEnumerator];
-		id e = nil;
-		
-		while ((e = [en nextObject]) != nil)
-		{
-			[self addElement: e];
-		}
+		[e setParent: self];
 	}
+
 	_elements = [elements retain];
 }
 

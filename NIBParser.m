@@ -155,14 +155,6 @@ void PrintMapTableOids(NSMapTable *mt)
 	XMLNode *objects = [[XMLNode alloc] initWithName: @"objects"];
 	id o = nil;
 
-/*
-	[document setParent: nil];
-	[dependencies setParent: document];
-	[deployment setParent: dependencies];
-	[plugIn setParent: dependencies];
-	[capability setParent: dependencies];
-	[objects setParent: document];
-*/
 #ifdef DEBUG
 	NSLog(@"values = %@", values);
 	NSLog(@"keys = %@", keys);

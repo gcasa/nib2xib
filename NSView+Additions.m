@@ -28,7 +28,7 @@
 
 @implementation NSView (toXML)
 
-- (NSMutableArray *) subviewsToXml: (id<OidProvider>) parser
+- (NSMutableArray *) subviewsToXml: (id<OidProvider>) parser withParent: (XMLNode *)parent
 {
     NSMutableArray *array = [NSMutableArray array];
     NSEnumerator *en = [[self subviews] objectEnumerator];
@@ -58,18 +58,19 @@
 - (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
 {
     NSMutableDictionary *attributes = [self attributesFromProperties];
-    NSMutableArray *elements = [self subviewsToXml: parser];
-    XMLNode *subviewsXml = [[XMLNode alloc] initWithName: @"subviews" value: @"" attributes: nil elements: elements];
     NSString *className = NSStringFromClass([self class]);    
     NSString *name = [className classNameToTagName];
     XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes 
-        elements: [[self subviews] count] > 0 ? [NSMutableArray arrayWithObject: subviewsXml] : [NSMutableArray array]];
+        elements: nil];
+    NSMutableArray *elements = [self subviewsToXml: parser withParent: node];
+    XMLNode *subviewsXml = [[XMLNode alloc] initWithName: @"subviews" value: @"" attributes: nil elements: elements];        
     XMLNode *frame = [XMLNode nodeForRect: [self frame] type: @"frame"];
     NSString *oid = [parser oidForObject: self];
 
-    // [subviewsXml setParent: node];
+    // Put everything together.
     [node addAttribute: @"id" value: oid];
     [node addElement: frame];
+    [node addElement: subviewsXml];
 
     return node;
 }
