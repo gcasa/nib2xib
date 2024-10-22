@@ -32,7 +32,7 @@ int main(int argc, const char *argv[])
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
   // If we have more than one argument, assume it is the nib file...
-  if (argc > 1)
+  if (argc == 3)
   {
     NSString *nibName = [NSString stringWithCString: argv[1]];
     NSString *outputFileName = [NSString stringWithCString: argv[2]];
@@ -52,6 +52,11 @@ int main(int argc, const char *argv[])
     {
       NSLog(@"Could not write file %@", outputFileName);
     }
+  }
+  else
+  {
+    NSLog(@"You must provide both an input.nib and an out.xib file name.");
+    NSLog(@"Usage: nib2xib input.nib output.xib");
   }
 
   [pool release];
