@@ -55,8 +55,8 @@ int main(int argc, const char *argv[])
   }
   else
   {
-    NSLog(@"You must provide both an input.nib and an out.xib file name.");
-    NSLog(@"Usage: nib2xib input.nib output.xib");
+    puts("NOTE: You must provide both an input.nib and an out.xib file name.");
+    puts("Usage: nib2xib input.nib output.xib");
   }
 
   [pool release];
