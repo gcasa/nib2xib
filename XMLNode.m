@@ -238,7 +238,7 @@
 	int i = 0;
 	NSString *result = @"";
 
-	if (level > 0)
+	if (level >= 0)
 	{
 		result = @"\n";
 	}
