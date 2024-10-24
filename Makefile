@@ -15,12 +15,12 @@ LANGUAGE = English
 
 CLASSES = NIBParser.m NSIBObjectData.m XMLDocument.m XMLElement.m XMLNode.m\
           NSWindowTemplate.m NSMenuTemplate.m NSCustomObject.m\
-          NSString+Additions.m NSView+Additions.m
+          NSString+Additions.m NSView+Additions.m NSObject+KeyExtraction.m
 
 HFILES = NIBParser.h NSClassSwapper.h NSIBObjectData.h XMLDocument.h\
          XMLElement.h XMLNode.h NSWindowTemplate.h NSCustomObject.h\
          NSMenuTemplate.h, NSString+Additions.h, NSView+Additions.h\
-         OidProvider.h XMLParsing.h
+         OidProvider.h XMLParsing.h NSObject+KeyExtraction.h
 
 MFILES = nib2xib_main.m
 
