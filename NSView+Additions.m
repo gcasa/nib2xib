@@ -60,12 +60,14 @@
     NSMutableDictionary *attributes = [self attributesFromProperties];
     NSString *className = NSStringFromClass([self class]);    
     NSString *name = [className classNameToTagName];
-    XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes 
-        elements: nil];
+    XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: nil];
     NSMutableArray *elements = [self subviewsToXml: parser withParent: node];
     XMLNode *subviewsXml = [[XMLNode alloc] initWithName: @"subviews" value: @"" attributes: nil elements: elements];        
     XMLNode *frame = [XMLNode nodeForRect: [self frame] type: @"frame"];
     NSString *oid = [parser oidForObject: self];
+
+    NSLog(@"subviewsXml = %@", subviewsXml);
+    NSLog(@"elements = %@", elements);
 
     // Put everything together.
     [node addAttribute: @"id" value: oid];

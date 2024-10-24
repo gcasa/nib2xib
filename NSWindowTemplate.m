@@ -131,7 +131,7 @@
     [node addAttribute: @"customClass" value: windowClass];
     [node addAttribute: @"id" value: oid];
     [node addElement: frame];
-    [node addElement: windowViewXml];
+    // [node addElement: windowViewXml];
     
     return node;
 }

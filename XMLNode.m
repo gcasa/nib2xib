@@ -48,9 +48,6 @@
 	self = [super init];
 	if (self != nil)
 	{
-		NSEnumerator *en = nil;
-		id e = nil;
-
 		[self setName: name];
 		[self setAttributes: attributes];
 		[self setValue: value];
@@ -59,10 +56,15 @@
 		{
 			elements = [[NSMutableArray alloc] init];
 		}
-
-		while ((e = [en nextObject]) != nil)
+		else
 		{
-			[self addElement: e];
+			NSEnumerator *en = [elements objectEnumerator];
+			id e = nil;
+
+			while ((e = [en nextObject]) != nil)
+			{
+				[self addElement: e];
+			}
 		}
 	}
 	return self;
