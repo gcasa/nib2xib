@@ -28,6 +28,7 @@
 
 #import "XMLNode.h"
 #import "NSString+Additions.h"
+
 @implementation NSWindowTemplate (Methods)
 
 - (int) interfaceStyle
@@ -117,10 +118,20 @@
     XMLNode *frame = [XMLNode nodeForRect: windowRect type: @"contentRect"];
     NSString *oid = [parser oidForObject: self];
 
+    if (windowTitle != nil)
+    {
+        XMLNode *styleMask = [[XMLNode alloc] initWithName: @"windowStyleMask"];        
+    
+        [styleMask addAttribute: @"key" value: @"styleMask"];
+        [styleMask addAttribute: @"titled" value: @"YES"];
+        [node addElement: styleMask];
+    }
+
     [windowViewXml addAttribute: @"key" value: @"contentView"];
     [node addAttribute: @"customClass" value: windowClass];
     [node addAttribute: @"id" value: oid];
     [node addElement: frame];
+    [node addElement: windowViewXml];
     
     return node;
 }
