@@ -174,6 +174,10 @@ void PrintMapTableOids(NSMapTable *mt)
 	[document addElement: objects];
 
 	// Iterate over all objects in the map table...
+	// NOTE: At first this is confusing and it looks backwards...
+	//   it's important to remember that in the maptable in a nib, the
+	//   keys are the objects.   This table maps the objects back to their
+	//   symbolic names in the nib file.
 	while ((o = [en nextObject]) != nil)
 	{
 		NSString *label = NSMapGet(nameTable, o);
@@ -197,7 +201,7 @@ void PrintMapTableOids(NSMapTable *mt)
 
 			// NSLog(@"class = %@", [o menuClassName]);
 			// NSLog(@"view = %@", [o view]);
-			// NSLog(@"realObject = %@", [o realObject]);
+			NSLog(@"realObject = %@", [o realObject]);
 		}
 		else
 		{

@@ -81,10 +81,20 @@
 
 + (NSArray *) skippedKeys
 {
-  return [NSArray arrayWithObjects: @"needsDisplay", 
+  NSArray *_skippedKeys = [NSArray arrayWithObjects: @"needsDisplay", 
     @"needsDisplayInRect", 
     @"upGState",
     nil];
+  return _skippedKeys;
+}
+
++ (NSArray *) keyObjects
+{
+  NSArray *_keyObjects = [NSArray arrayWithObjects: @"needsDisplay", 
+    @"contentView", 
+    @"frame",
+    nil];
+  return _keyObjects;
 }
 
 - (NSArray *) keysForObject
@@ -121,25 +131,45 @@
   NSLog(@"class = %@, keys = %@", className, allKeys);
   while ( (k = [e nextObject]) != nil )
   { 
+    SEL s = NSSelectorFromString(k);
+
     if ([[NSObject skippedKeys] containsObject: k] == NO)
     {
-      SEL s = NSSelectorFromString(k);
       id o = [self performSelector: s];
       
       if ([o isKindOfClass: [NSArray class]])
       {
-          NSEnumerator *aen = [o objectEnumerator];
-          id obj = nil;
+        NSEnumerator *aen = [o objectEnumerator];
+        id obj = nil;
 
-          while ((obj = [aen nextObject]) != nil)
-          {
-              XMLNode *xmlObject = [obj processObject];
-              [result addElement: xmlObject];
-          }
+        while ((obj = [aen nextObject]) != nil)
+        {
+          XMLNode *xmlObject = [obj processObject];
+          [result addElement: xmlObject];
+        }
       }
       else if ([o isKindOfClass: [NSObject class]])
       {
+        if ([k isEqualToString: k])
+        {
+          NSArray *views = [o performSelector: s];
+          XMLNode *sv = nil;
+          NSEnumerator *sen = [views objectEnumerator];
+          NSView *view = nil;
+          NSMutableArray *elements = [NSMutableArray array];
 
+          while ((view = [sen nextObject]) != nil)
+          {
+            XMLNode *node = [view processObject];
+            [elements addObject: node];
+          }
+
+          sv = [[XMLNode alloc] initWithName: k value: @"" attributes: nil elements: elements];
+        }
+        else
+        {
+
+        }
       }
     }
   }
