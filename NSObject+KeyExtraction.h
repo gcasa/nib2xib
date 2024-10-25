@@ -24,9 +24,12 @@
 
 #import <Foundation/Foundation.h>
 
+@class XMLNode;
+
 @interface NSObject (KeyExtraction)
 
 + (NSArray *) skippedKeys;
-- (NSArray *) keysForObject: (id)object;
+- (XMLNode *) processObject;
+- (NSArray *) keysForObject;
 
 @end

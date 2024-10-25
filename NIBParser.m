@@ -192,7 +192,12 @@ void PrintMapTableOids(NSMapTable *mt)
 		}
 		else if ([o isKindOfClass: [NSMenuTemplate class]])
 		{
-			// [self handleMenuObject: o];
+			// XMLNode *mo = [o toXMLWithParser];
+			// NSLog(@"o = %@", o);
+
+			// NSLog(@"class = %@", [o menuClassName]);
+			// NSLog(@"view = %@", [o view]);
+			// NSLog(@"realObject = %@", [o realObject]);
 		}
 		else
 		{

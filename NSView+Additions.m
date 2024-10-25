@@ -25,6 +25,7 @@
 #import "NSView+Additions.h"
 #import "NSString+Additions.h"
 #import "NIBParser.h"
+#import "NSObject+KeyExtraction.h"
 
 @implementation NSView (toXML)
 
@@ -55,6 +56,8 @@
     return result;
 }
 
+
+
 - (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
 {
     NSMutableDictionary *attributes = [self attributesFromProperties];
@@ -66,13 +69,16 @@
     XMLNode *frame = [XMLNode nodeForRect: [self frame] type: @"frame"];
     NSString *oid = [parser oidForObject: self];
 
-    NSLog(@"subviewsXml = %@", subviewsXml);
-    NSLog(@"elements = %@", elements);
+    // NSLog(@"subviewsXml = %@", subviewsXml);
+    // NSLog(@"elements = %@", elements);
+    // NSLog(@"keys = %@", [self keysForObject: self]);
 
     // Put everything together.
     [node addAttribute: @"id" value: oid];
     [node addElement: frame];
     [node addElement: subviewsXml];
+
+
 
     return node;
 }

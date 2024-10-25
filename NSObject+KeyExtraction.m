@@ -25,9 +25,11 @@
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSArray.h>
+#import <AppKit/NSView.h>
 
 #import "NSObject+KeyExtraction.h"
 #import "NSString+Additions.h"
+#import "XMLNode.h"
 
 @implementation NSObject (KeyExtraction)
 
@@ -38,25 +40,32 @@
   struct objc_method_list *mlist;
   struct objc_class *superclass;
 
+  // NSLog(@"class = %@", cls);
   if (cls == nil || cls == [NSObject class])
   {
     return;
   }
   
+  // NSLog(@"Processing method list...");
   while ( mlist = class_nextMethodList( cls, &iterator ) )
   {
   	unsigned int count = 0; 
   	unsigned int i = 0;
 
   	count = mlist->method_count;
-  	for (i = 0; i < count; count++)
+    // NSLog(@"count = %d", count);
+  	for (i = 0; i < count; i++)
   	{
     	struct objc_method method = mlist->method_list[i];
     	SEL method_name = method.method_name;
-    	[methodsArray addObject: NSStringFromSelector(method_name)];
+      NSString *methodName = NSStringFromSelector(method_name);
+
+    	[methodsArray addObject: methodName];
+      // NSLog(@"i = %d, methodName = %@", i, methodName);
   	}
   }
-  
+  // NSLog(@"Done processing");
+
   // Recursively call this method for the superclass
   superclass = cls->super_class;
   [self getAllMethodsForClass:superclass intoArray:methodsArray];
@@ -72,14 +81,15 @@
 
 + (NSArray *) skippedKeys
 {
-  return [NSArray array]; // WithObjects: @"context", // @"buildConfigurationList", @"buildConfigurations",
-		  //@"array", @"valueforKey", @"objectatIndexedSubscript", @"totalFiles",
-		  //@"filename", @"currentFile", @"parameter", @"showEnvVarsInLog", nil];
+  return [NSArray arrayWithObjects: @"needsDisplay", 
+    @"needsDisplayInRect", 
+    @"upGState",
+    nil];
 }
 
-- (NSArray *) keysForObject: (id)object
+- (NSArray *) keysForObject
 {
-  NSArray *methods = [NSObject recursiveGetAllMethodsForClass: [object class]];
+  NSArray *methods = [NSObject recursiveGetAllMethodsForClass: [self class]];
   NSEnumerator *en = [methods objectEnumerator];
   NSString *selectorName = nil;
   NSMutableArray *result = [NSMutableArray arrayWithCapacity: [methods count]];
@@ -94,6 +104,44 @@
 		  keyName = [keyName lowercaseFirstCharacter];
 	  	[result addObject: keyName];
 		}
+  } 
+
+  return result;
+}
+
+- (XMLNode *) processObject
+{
+  NSArray *allKeys = [self keysForObject];
+  NSEnumerator *e = [allKeys objectEnumerator];
+  id k = nil;
+  NSString *className = NSStringFromClass([self class]);    
+  NSString *name = [className classNameToTagName];
+  XMLNode *result = [[XMLNode alloc] initWithName: name];
+
+  NSLog(@"class = %@, keys = %@", className, allKeys);
+  while ( (k = [e nextObject]) != nil )
+  { 
+    if ([[NSObject skippedKeys] containsObject: k] == NO)
+    {
+      SEL s = NSSelectorFromString(k);
+      id o = [self performSelector: s];
+      
+      if ([o isKindOfClass: [NSArray class]])
+      {
+          NSEnumerator *aen = [o objectEnumerator];
+          id obj = nil;
+
+          while ((obj = [aen nextObject]) != nil)
+          {
+              XMLNode *xmlObject = [obj processObject];
+              [result addElement: xmlObject];
+          }
+      }
+      else if ([o isKindOfClass: [NSObject class]])
+      {
+
+      }
+    }
   }
 
   return result;
