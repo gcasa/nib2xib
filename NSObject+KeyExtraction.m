@@ -81,8 +81,9 @@
 
 + (NSArray *) skippedKeys
 {
-  NSArray *_skippedKeys = [NSArray arrayWithObjects: @"needsDisplay", 
-    @"needsDisplayInRect", 
+  NSArray *_skippedKeys = [NSArray arrayWithObjects: 
+    @"needsDisplay",
+    @"needsDisplayInRect",
     @"upGState",
     nil];
   return _skippedKeys;
@@ -90,8 +91,8 @@
 
 + (NSArray *) keyObjects
 {
-  NSArray *_keyObjects = [NSArray arrayWithObjects: @"needsDisplay", 
-    @"contentView", 
+  NSArray *_keyObjects = [NSArray arrayWithObjects:
+    @"contentView",
     @"frame",
     nil];
   return _keyObjects;
@@ -127,14 +128,14 @@
   NSString *className = NSStringFromClass([self class]);    
   NSString *name = [className classNameToTagName];
   XMLNode *result = [[XMLNode alloc] initWithName: name];
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 
   NSLog(@"class = %@, keys = %@", className, allKeys);
   while ( (k = [e nextObject]) != nil )
   { 
-    SEL s = NSSelectorFromString(k);
-
     if ([[NSObject skippedKeys] containsObject: k] == NO)
     {
+      SEL s = NSSelectorFromString(k);
       id o = [self performSelector: s];
       
       if ([o isKindOfClass: [NSArray class]])
@@ -147,6 +148,10 @@
           XMLNode *xmlObject = [obj processObject];
           [result addElement: xmlObject];
         }
+      }
+      else if ([o isKindOfClass: [NSString class]])
+      {
+        [result addAttribute: k value: o];
       }
       else if ([o isKindOfClass: [NSObject class]])
       {
