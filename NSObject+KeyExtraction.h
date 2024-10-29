@@ -23,13 +23,15 @@
 */
 
 #import <Foundation/Foundation.h>
+#import "XMLParsing.h"
 
 @class XMLNode;
 
 @interface NSObject (KeyExtraction)
 
 + (NSArray *) skippedKeys;
-- (XMLNode *) processObject;
-- (NSArray *) keysForObject;
+- (XMLNode *) processObjectWithParser: (id<XMLParsing>)parser;
+- (NSSet *) keysForObject;
+- (NSString *) classNameForParser;
 
 @end

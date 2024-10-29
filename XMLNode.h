@@ -41,6 +41,7 @@
 }
 
 + (id) nodeForRect: (NSRect)frame type: (NSString *)type;
++ (id) nodeForSize: (NSSize)size type: (NSString *)type;
 
 - (id) initWithName: (NSString *)name;
 - (id) initWithName: (NSString *)name value: (NSString *)value attributes: (NSMutableDictionary *)attributes elements: (NSMutableArray *)elements;

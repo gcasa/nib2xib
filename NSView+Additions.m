@@ -60,6 +60,7 @@
 
 - (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
 {
+    /*
     NSMutableDictionary *attributes = [self attributesFromProperties];
     NSString *className = NSStringFromClass([self class]);    
     NSString *name = [className classNameToTagName];
@@ -77,10 +78,10 @@
     [node addAttribute: @"id" value: oid];
     [node addElement: frame];
     [node addElement: subviewsXml];
+    */
 
-
-
-    return node;
+    // XMLNode *node = [self processObjectWithParser: parser];
+    return nil; // node;
 }
 
 @end

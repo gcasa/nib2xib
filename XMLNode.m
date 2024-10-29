@@ -43,6 +43,19 @@
 	return node;
 }
 
++ (id) nodeForSize: (NSSize)size type: (NSString *)type
+{
+	NSMutableDictionary *result = [NSMutableDictionary dictionary];
+	XMLNode *node = nil;
+
+    [result setObject: [NSString stringWithFormat: @"%g", size.width] forKey: @"width"];
+    [result setObject: [NSString stringWithFormat: @"%g", size.height] forKey: @"height"];
+    [result setObject: type forKey: @"key"];
+	
+	node = [[XMLNode alloc] initWithName: @"size" value: @"" attributes: result elements: nil];
+	return node;
+}
+
 - (id) initWithName: (NSString *)name value: (NSString *)value attributes: (NSMutableDictionary *)attributes elements: (NSMutableArray *)elements
 {
 	self = [super init];

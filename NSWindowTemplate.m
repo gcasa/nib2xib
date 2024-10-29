@@ -28,6 +28,7 @@
 
 #import "XMLNode.h"
 #import "NSString+Additions.h"
+#import "NSObject+KeyExtraction.h"
 
 @implementation NSWindowTemplate (Methods)
 
@@ -102,17 +103,31 @@
 
     // Title and other string properties...
     [result setObject: windowTitle forKey: @"title"];
+    [result setObject: windowClass forKey: @"customClass"];
 
     // Flags...
-    // TODO...
 
     return result;
+}
+
+/*
+- (NSSet *) keysForObject
+{
+    return [NSSet setWithObjects: @"interfaceStyle", 
+        @"windowRect", @"windowStyleMask",
+        @"windowTitle", @"minSize", @"screenRect", nil];
+}
+*/
+
+- (NSString *) classNameForParser
+{
+    return @"NSWindow";
 }
 
 - (XMLNode *) toXMLWithParser: (id<OidProvider>)parser 
 {
     NSMutableDictionary *attributes = [self attributesFromProperties];
-    XMLNode *windowViewXml = [windowView toXMLWithParser: parser];    
+    XMLNode *windowViewXml = [windowView processObjectWithParser: parser]; 
     NSMutableArray *elements = [NSMutableArray arrayWithObject: windowViewXml];
     XMLNode *node = [[XMLNode alloc] initWithName: @"window" value: @"" attributes: attributes elements: elements];
     XMLNode *frame = [XMLNode nodeForRect: windowRect type: @"contentRect"];

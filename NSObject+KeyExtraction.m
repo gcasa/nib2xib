@@ -30,6 +30,7 @@
 #import "NSObject+KeyExtraction.h"
 #import "NSString+Additions.h"
 #import "XMLNode.h"
+#import "OidProvider.h"
 
 @implementation NSObject (KeyExtraction)
 
@@ -79,12 +80,55 @@
   return [methodsArray copy];
 }
 
+/*
+    titleWithMnemonic, 
+    nextText, 
+    previousText, 
+    selectable, 
+    editable, 
+    bezeled, 
+    bordered, 
+    enabled, 
+    textColor, 
+    drawsBackground, 
+    backgroundColor, 
+    frameSize, 
+    refusesFirstResponder, 
+    needsDisplay, 
+    objectValue, 
+    doubleValue, 
+    floatValue, 
+    attributedStringValue, 
+    intValue, 
+    stringValue, 
+    font, 
+    alignment, 
+    floatingPointFormatleftright, 
+    enabled, 
+    continuous, 
+    ignoresMultiClick, 
+    tag, 
+    action, 
+    target, 
+    cell, 
+    frameSize, 
+    */
+
 + (NSArray *) skippedKeys
 {
   NSArray *_skippedKeys = [NSArray arrayWithObjects: 
     @"needsDisplay",
     @"needsDisplayInRect",
     @"upGState",
+    @"allowsEditingTextAttributes", 
+    @"importsGraphics", 
+    @"delegate", 
+    @"errorAction", 
+    @"postsBoundsChangedNotifications", 
+    @"postsFrameChangedNotifications", 
+    @"nextKeyView",
+    @"prevKeyView",
+    @"nextResponder",
     nil];
   return _skippedKeys;
 }
@@ -93,17 +137,46 @@
 {
   NSArray *_keyObjects = [NSArray arrayWithObjects:
     @"contentView",
+    @"cell",
+    @"contentRect",
+    @"screenRect",
     @"frame",
+    @"autoresizingMask",
+    @"windowStyleMask",
     nil];
   return _keyObjects;
 }
 
-- (NSArray *) keysForObject
++ (NSArray *) nonObjects
+{
+  NSArray *_nonObjects = [NSArray arrayWithObjects:
+    @"contentRect",
+    @"screenRect",
+    @"frame",
+    @"autoresizingMask",
+    @"windowStyleMask",
+    @"windowPositionMask",
+    @"interfaceStyle", 
+    @"boundsRotation", 
+    @"boundsSize", 
+    @"boundsOrigin", 
+    @"bounds",
+    @"frameRotation", 
+    @"frame", 
+    @"frameSize", 
+    @"frameOrigin", 
+    @"autoresizesSubviews",
+    @"minSize",
+    nil];
+  return _nonObjects;
+}
+
+- (NSSet *) keysForObject
 {
   NSArray *methods = [NSObject recursiveGetAllMethodsForClass: [self class]];
   NSEnumerator *en = [methods objectEnumerator];
   NSString *selectorName = nil;
-  NSMutableArray *result = [NSMutableArray arrayWithCapacity: [methods count]];
+  NSMutableSet *result = [NSMutableArray arrayWithCapacity: [methods count]];
   
   while ((selectorName = [en nextObject]) != nil)
   {
@@ -120,60 +193,85 @@
   return result;
 }
 
-- (XMLNode *) processObject
+- (NSString *) classNameForParser
 {
-  NSArray *allKeys = [self keysForObject];
+  NSString *className = NSStringFromClass([self class]);    
+  return className;
+}
+
+- (XMLNode *) processObjectWithParser: (id<OidProvider>)parser
+{
+  NSSet *allKeys = [self keysForObject];
   NSEnumerator *e = [allKeys objectEnumerator];
   id k = nil;
-  NSString *className = NSStringFromClass([self class]);    
+  NSString *className = [self classNameForParser];    
   NSString *name = [className classNameToTagName];
   XMLNode *result = [[XMLNode alloc] initWithName: name];
   NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+  NSString *oid = [parser oidForObject: self];
 
-  NSLog(@"class = %@, keys = %@", className, allKeys);
+  if ([self isKindOfClass: [NSView class]])
+  {
+    NSLog(@"class = %@, keys = %@", className, allKeys);
+  }
+  
+  [result addAttribute: @"id" value: oid];
   while ( (k = [e nextObject]) != nil )
   { 
     if ([[NSObject skippedKeys] containsObject: k] == NO)
     {
       SEL s = NSSelectorFromString(k);
-      id o = [self performSelector: s];
-      
-      if ([o isKindOfClass: [NSArray class]])
-      {
-        NSEnumerator *aen = [o objectEnumerator];
-        id obj = nil;
 
-        while ((obj = [aen nextObject]) != nil)
+      if ([[NSObject nonObjects] containsObject: k]) // frames, sizes, flags...
+      {
+        NSLog(@"Current NON-Object = %@", k);
+        if ([[NSObject keyObjects] containsObject: k])
         {
-          XMLNode *xmlObject = [obj processObject];
-          [result addElement: xmlObject];
+          IMP imp = [self methodForSelector: s];
+          if ([k hasSuffix: @"Rect"] || [k isEqualToString: @"frame"])
+          {
+            NSRect (*func)(id, SEL) = (NSRect (*)(id, SEL))imp;
+            NSRect rect = (func)(self, s);
+            XMLNode *rectNode = [XMLNode nodeForRect: rect type: k];
+            [result addElement: rectNode];
+          }
+          else if ([k hasSuffix: @"Size"])
+          {
+            NSSize (*func)(id, SEL) = (NSSize (*)(id, SEL))imp;
+            NSSize size = (func)(self, s);
+            XMLNode *szNode = [XMLNode nodeForSize: size type: k];
+            [result addElement: szNode];
+          }
         }
       }
-      else if ([o isKindOfClass: [NSString class]])
+      else // Objects...
       {
-        [result addAttribute: k value: o];
-      }
-      else if ([o isKindOfClass: [NSObject class]])
-      {
-        if ([k isEqualToString: k])
+        id o = [self performSelector: s];
+        
+        if ([[NSObject keyObjects] containsObject: k])
         {
-          NSArray *views = [o performSelector: s];
-          XMLNode *sv = nil;
-          NSEnumerator *sen = [views objectEnumerator];
-          NSView *view = nil;
-          NSMutableArray *elements = [NSMutableArray array];
-
-          while ((view = [sen nextObject]) != nil)
-          {
-            XMLNode *node = [view processObject];
-            [elements addObject: node];
-          }
-
-          sv = [[XMLNode alloc] initWithName: k value: @"" attributes: nil elements: elements];
         }
         else
         {
+          NSLog(@"Current object = %@", k);
+          if ([o isKindOfClass: [NSArray class]])
+          {
+            NSEnumerator *aen = [o objectEnumerator];
+            id obj = nil;
+            XMLNode *arrayObject = [[XMLNode alloc] initWithName: k];
 
+            while ((obj = [aen nextObject]) != nil)
+            {
+              XMLNode *xmlObject = [obj processObjectWithParser: parser];
+              [arrayObject addElement: xmlObject];
+            }
+
+            [result addElement: arrayObject];
+          }
+          else if ([o isKindOfClass: [NSString class]])
+          {
+            [result addAttribute: k value: o];
+          }
         }
       }
     }

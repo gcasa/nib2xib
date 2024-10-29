@@ -25,6 +25,7 @@
 #import <AppKit/AppKit.h>
 
 #import "XMLParsing.h"
+#import "NSObject+KeyExtraction.h"
 
 @class XMLNode;
 
@@ -65,10 +66,10 @@ typedef struct _GSWindowTemplateFlags
 @end
 
 @interface NSView (toXML) <XMLParsing>
-- (XMLNode *) toXML;
+- (XMLNode *) toXMLWithParser: (id<OidProvider>)id;
 @end
 
-@interface NSWindowTemplate (Methods) <XMLParsing>
+@interface NSWindowTemplate (Methods)
 
 - (int) interfaceStyle;
 - (void) setInterfaceStyle:(int)fp16;
