@@ -28,7 +28,7 @@
 #import "NSObject+KeyExtraction.h"
 
 @implementation NSView (toXML)
-
+/*
 - (NSMutableArray *) subviewsToXml: (id<OidProvider>) parser withParent: (XMLNode *)parent
 {
     NSMutableArray *array = [NSMutableArray array];
@@ -47,65 +47,16 @@
 - (NSMutableDictionary *) attributesFromProperties
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    /*
-    if ([[self window] contentView] == self)
-    {
-        [result setObject: @"contentView" forKey: @"key"];
-    }
-    */
     return result;
 }
+*/
 
-
-
-- (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
+- (NSSet *) keysForObject
 {
-    /*
-    NSMutableDictionary *attributes = [self attributesFromProperties];
-    NSString *className = NSStringFromClass([self class]);    
-    NSString *name = [className classNameToTagName];
-    XMLNode *node = [[XMLNode alloc] initWithName: name value: @"" attributes: attributes elements: nil];
-    NSMutableArray *elements = [self subviewsToXml: parser withParent: node];
-    XMLNode *subviewsXml = [[XMLNode alloc] initWithName: @"subviews" value: @"" attributes: nil elements: elements];        
-    XMLNode *frame = [XMLNode nodeForRect: [self frame] type: @"frame"];
-    NSString *oid = [parser oidForObject: self];
-
-    // NSLog(@"subviewsXml = %@", subviewsXml);
-    // NSLog(@"elements = %@", elements);
-    // NSLog(@"keys = %@", [self keysForObject: self]);
-
-    // Put everything together.
-    [node addAttribute: @"id" value: oid];
-    [node addElement: frame];
-    [node addElement: subviewsXml];
-    */
-
-    // XMLNode *node = [self processObjectWithParser: parser];
-    return nil; // node;
+    NSSet *keys = [super keysForObject];
+    NSMutableSet *set = [NSMutableSet setWithSet: keys];
+    [set addObject: @"subviews"];
+    return set;
 }
 
 @end
-
-/*
-@implementation NSButton (toXML)
-
-- (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
-{
-    XMLNode *node = [super toXMLWithParser: parser];
-    [node addAttribute: @"title" value: [self title]];
-    return node;
-}
-
-@end
-*/
-
-/*
-@implementation NSTextField (toXML)
-
-- (XMLNode *) toXMLWithParser: (id<OidProvider>) parser
-{
-    XMLNode *node = [super toXMLWithParser: parser];
-    // [node addAttribute: @"title" value: [self stringValue]];
-    return node;
-}
-*/

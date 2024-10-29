@@ -23,14 +23,14 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "XMLParsing.h"
+#import "OidProvider.h"
 
 @class XMLNode;
 
 @interface NSObject (KeyExtraction)
 
 + (NSArray *) skippedKeys;
-- (XMLNode *) processObjectWithParser: (id<XMLParsing>)parser;
+- (XMLNode *) processObjectWithParser: (id<OidProvider>)parser;
 - (NSSet *) keysForObject;
 - (NSString *) classNameForParser;
 

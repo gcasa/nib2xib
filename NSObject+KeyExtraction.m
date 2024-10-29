@@ -32,6 +32,8 @@
 #import "XMLNode.h"
 #import "OidProvider.h"
 
+#define DEBUG
+
 @implementation NSObject (KeyExtraction)
 
 + (void) getAllMethodsForClass: (Class)cls
@@ -210,11 +212,13 @@
   NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
   NSString *oid = [parser oidForObject: self];
 
+#ifdef DEBUG
   if ([self isKindOfClass: [NSView class]])
   {
     NSLog(@"class = %@, keys = %@", className, allKeys);
   }
-  
+#endif
+
   [result addAttribute: @"id" value: oid];
   while ( (k = [e nextObject]) != nil )
   { 

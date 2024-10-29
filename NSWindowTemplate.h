@@ -65,10 +65,6 @@ typedef struct _GSWindowTemplateFlags
 }
 @end
 
-@interface NSView (toXML) <XMLParsing>
-- (XMLNode *) toXMLWithParser: (id<OidProvider>)id;
-@end
-
 @interface NSWindowTemplate (Methods)
 
 - (int) interfaceStyle;
