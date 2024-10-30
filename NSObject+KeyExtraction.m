@@ -285,6 +285,10 @@
               {
                 [node addAttribute: @"flexibleMinY" value: @"YES"];                
               }
+              else if (mask | NSViewMinXMargin)
+              {
+                [node addAttribute: @"flexibleMinY" value: @"YES"];                
+              } 
               else if (mask | NSViewMaxYMargin)
               {
                 [node addAttribute: @"flexibleMaxY" value: @"YES"];                
