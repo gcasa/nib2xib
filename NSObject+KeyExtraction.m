@@ -135,7 +135,8 @@
     @"frameOrigin", // not defined on some objects...
     @"floatValue", 
     @"doubleValue",
-    @"intValue",    
+    @"intValue",
+    @"objectValue", // usually the same as stringValue
     nil];
   return _skippedKeys;
 }
@@ -303,7 +304,8 @@
           }
           else if ([o isKindOfClass: [NSString class]])
           {
-            [result addAttribute: k value: o];
+            NSString *filteredString = [o stringByReplacingOccurrencesOfString: @"\n" withString: @""];
+            [result addAttribute: k value: filteredString];
           }
         }
       }
