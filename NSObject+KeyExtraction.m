@@ -225,7 +225,6 @@
   NSString *className = [self classNameForParser];    
   NSString *name = [className classNameToTagName];
   XMLNode *result = [[XMLNode alloc] initWithName: name];
-  NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
   NSString *oid = [parser oidForObject: self];
 
 #ifdef DEBUG
@@ -272,8 +271,25 @@
           }
           else if ([k hasSuffix: @"Mask"])
           {
-            node = [[XMLNode alloc] initWithName: k];
-            [node addAttribute: @"key" value: k];
+            if ([k isEqualToString: @"autoresizingMask"])
+            {
+              unsigned int mask = [(NSView *)self autoresizingMask];
+
+              node = [[XMLNode alloc] initWithName: k];
+              [node addAttribute: @"key" value: k];
+              if (mask | NSViewMaxXMargin)
+              {
+                [node addAttribute: @"flexibleMaxX" value: @"YES"];
+              }
+              else if (mask | NSViewMinYMargin)
+              {
+                [node addAttribute: @"flexibleMinY" value: @"YES"];                
+              }
+              else if (mask | NSViewMaxYMargin)
+              {
+                [node addAttribute: @"flexibleMaxY" value: @"YES"];                
+              }              
+            }
           }
 
           // If the node was set above, add it...
