@@ -270,6 +270,11 @@
             NSSize size = (func)(self, s);
             node = [XMLNode nodeForSize: size type: k];
           }
+          else if ([k hasSuffix: @"Mask"])
+          {
+            node = [[XMLNode alloc] initWithName: k];
+            [node addAttribute: @"key" value: k];
+          }
 
           // If the node was set above, add it...
           if (node != nil)
@@ -300,7 +305,11 @@
               [arrayObject addElement: xmlObject];
             }
 
-            [result addElement: arrayObject];
+            // if count is greater than 0, then add the array, otherwise...
+            if ([o count] > 0)
+            {
+              [result addElement: arrayObject];
+            }
           }
           else if ([o isKindOfClass: [NSString class]])
           {
