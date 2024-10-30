@@ -281,18 +281,18 @@
               {
                 [node addAttribute: @"flexibleMaxX" value: @"YES"];
               }
-              else if (mask | NSViewMinYMargin)
+              else if (mask | NSViewMaxYMargin)
               {
-                [node addAttribute: @"flexibleMinY" value: @"YES"];                
-              }
+                [node addAttribute: @"flexibleMaxY" value: @"YES"];                
+              }  
               else if (mask | NSViewMinXMargin)
               {
                 [node addAttribute: @"flexibleMinY" value: @"YES"];                
               } 
-              else if (mask | NSViewMaxYMargin)
+              else if (mask | NSViewMinYMargin)
               {
-                [node addAttribute: @"flexibleMaxY" value: @"YES"];                
-              }              
+                [node addAttribute: @"flexibleMinY" value: @"YES"];                
+              }            
             }
           }
 
