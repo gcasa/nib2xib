@@ -131,6 +131,11 @@
     @"nextKeyView",
     @"prevKeyView",
     @"nextResponder",
+    @"boundsOrigin", // not defined on some objects...
+    @"frameOrigin", // not defined on some objects...
+    @"floatValue", 
+    @"doubleValue",
+    @"intValue",    
     nil];
   return _skippedKeys;
 }
@@ -161,14 +166,17 @@
     @"interfaceStyle", 
     @"boundsRotation", 
     @"boundsSize", 
-    @"boundsOrigin", 
+//    @"boundsOrigin", 
     @"bounds",
     @"frameRotation", 
     @"frame", 
     @"frameSize", 
-    @"frameOrigin", 
+ //   @"frameOrigin", 
     @"autoresizesSubviews",
     @"minSize",
+    @"drawsBackground",
+    @"alignment", 
+    @"tag", 
     nil];
   return _nonObjects;
 }
@@ -185,10 +193,17 @@
     if ([selectorName hasPrefix: @"set"] && [selectorName isEqualToString: @"settings"] == NO)
 		{
 	  	NSString *keyName = [selectorName substringFromIndex: 3];
+      SEL s = NULL;
 
 		  keyName = [keyName stringByReplacingOccurrencesOfString: @":" withString: @""];
 		  keyName = [keyName lowercaseFirstCharacter];
-	  	[result addObject: keyName];
+      
+      // if the object responds, add it... this way we know it's a key.
+      s = NSSelectorFromString(keyName);
+      if (s != NULL)
+      {
+	  	  [result addObject: keyName];
+      }
 		}
   } 
 
@@ -226,25 +241,39 @@
     {
       SEL s = NSSelectorFromString(k);
 
+      // If the selector is NULL, skip it...
+      if (s == NULL)
+      {
+        NSLog(@"ERROR getting the selector %@", k);
+        break;
+      }
+
       if ([[NSObject nonObjects] containsObject: k]) // frames, sizes, flags...
       {
         NSLog(@"Current NON-Object = %@", k);
         if ([[NSObject keyObjects] containsObject: k])
         {
+          XMLNode *node = nil;
           IMP imp = [self methodForSelector: s];
+
+          // rect/frame, etc... non objects
           if ([k hasSuffix: @"Rect"] || [k isEqualToString: @"frame"])
           {
             NSRect (*func)(id, SEL) = (NSRect (*)(id, SEL))imp;
             NSRect rect = (func)(self, s);
-            XMLNode *rectNode = [XMLNode nodeForRect: rect type: k];
-            [result addElement: rectNode];
+            node = [XMLNode nodeForRect: rect type: k];
           }
           else if ([k hasSuffix: @"Size"])
           {
             NSSize (*func)(id, SEL) = (NSSize (*)(id, SEL))imp;
             NSSize size = (func)(self, s);
-            XMLNode *szNode = [XMLNode nodeForSize: size type: k];
-            [result addElement: szNode];
+            node = [XMLNode nodeForSize: size type: k];
+          }
+
+          // If the node was set above, add it...
+          if (node != nil)
+          {
+            [result addElement: node];
           }
         }
       }
