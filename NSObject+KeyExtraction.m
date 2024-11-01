@@ -26,6 +26,7 @@
 #import <Foundation/NSObject.h>
 #import <Foundation/NSArray.h>
 #import <AppKit/NSView.h>
+#import <AppKit/NSCell.h>
 
 #import "NSObject+KeyExtraction.h"
 #import "NSString+Additions.h"
@@ -82,39 +83,14 @@
   return [methodsArray copy];
 }
 
-/*
-    titleWithMnemonic, 
-    nextText, 
-    previousText, 
-    selectable, 
-    editable, 
-    bezeled, 
-    bordered, 
-    enabled, 
-    textColor, 
-    drawsBackground, 
-    backgroundColor, 
-    frameSize, 
-    refusesFirstResponder, 
-    needsDisplay, 
-    objectValue, 
-    doubleValue, 
-    floatValue, 
-    attributedStringValue, 
-    intValue, 
-    stringValue, 
-    font, 
-    alignment, 
-    floatingPointFormatleftright, 
-    enabled, 
-    continuous, 
-    ignoresMultiClick, 
-    tag, 
-    action, 
-    target, 
-    cell, 
-    frameSize, 
-    */
++ (NSArray *) skippedClasses
+{
+  NSArray *_skippedClasses = [NSArray arrayWithObjects: 
+    @"NSDynamicSystemColor",
+    @"NSNamedColorSpace",
+    nil];  
+  return _skippedClasses;
+}
 
 + (NSArray *) skippedKeys
 {
@@ -137,6 +113,14 @@
     @"doubleValue",
     @"intValue",
     @"objectValue", // usually the same as stringValue
+    @"mnemonicLocation", // mnemonics are no longer used...
+    @"state",
+    @"font",
+    @"textColor",
+    @"backgroundColor",
+    @"keyEquivalentFont",
+    @"concreteAttributedString",
+    @"alternateObjectValue",
     nil];
   return _skippedKeys;
 }
@@ -151,6 +135,7 @@
     @"frame",
     @"autoresizingMask",
     @"windowStyleMask",
+    @"bounds",
     nil];
   return _keyObjects;
 }
@@ -167,17 +152,21 @@
     @"interfaceStyle", 
     @"boundsRotation", 
     @"boundsSize", 
-//    @"boundsOrigin", 
     @"bounds",
     @"frameRotation", 
     @"frame", 
     @"frameSize", 
- //   @"frameOrigin", 
     @"autoresizesSubviews",
     @"minSize",
     @"drawsBackground",
     @"alignment", 
     @"tag", 
+    @"type",
+    @"wraps",
+    @"imageDimsWhenDisabled",
+    @"highlightsBy",
+    @"showsStateBy",
+    @"refusesFirstResponder",
     nil];
   return _nonObjects;
 }
@@ -250,14 +239,16 @@
 
       if ([[NSObject nonObjects] containsObject: k]) // frames, sizes, flags...
       {
+#ifdef DEBUG
         NSLog(@"Current NON-Object = %@", k);
+#endif        
         if ([[NSObject keyObjects] containsObject: k])
         {
           XMLNode *node = nil;
           IMP imp = [self methodForSelector: s];
 
           // rect/frame, etc... non objects
-          if ([k hasSuffix: @"Rect"] || [k isEqualToString: @"frame"])
+          if ([k hasSuffix: @"Rect"] || [k isEqualToString: @"frame"] || [k isEqualToString: @"bounds"])
           {
             NSRect (*func)(id, SEL) = (NSRect (*)(id, SEL))imp;
             NSRect rect = (func)(self, s);
@@ -283,16 +274,16 @@
               }
               else if (mask | NSViewMaxYMargin)
               {
-                [node addAttribute: @"flexibleMaxY" value: @"YES"];                
-              }  
+                [node addAttribute: @"flexibleMaxY" value: @"YES"];        
+              }
               else if (mask | NSViewMinXMargin)
               {
-                [node addAttribute: @"flexibleMinY" value: @"YES"];                
-              } 
+                [node addAttribute: @"flexibleMinY" value: @"YES"];           
+              }
               else if (mask | NSViewMinYMargin)
               {
-                [node addAttribute: @"flexibleMinY" value: @"YES"];                
-              }            
+                [node addAttribute: @"flexibleMinY" value: @"YES"]; 
+              }
             }
           }
 
@@ -302,17 +293,41 @@
             [result addElement: node];
           }
         }
+        else
+        {
+          /*
+          IMP imp = [self methodForSelector: s];
+          unsigned int (*func)(id, SEL) = (unsigned int (*)(id, SEL))imp;
+          unsigned int v = (func)(self, s);
+          [self addAttribute: k value: [NSString stringWithFormat: @"%d", v]];
+          */
+        }
       }
       else // Objects...
       {
         id o = [self performSelector: s];
         
+        if (o == nil)
+        {
+          continue;
+        }
+
         if ([[NSObject keyObjects] containsObject: k])
         {
+          XMLNode *node = [o processObjectWithParser: parser];
+
+          if ([o isKindOfClass: [NSCell class]])
+          {
+            [node addAttribute: @"key" value: @"cell"];
+          }
+
+          [result addElement: node];
         }
         else
         {
+#ifdef DEBUG        
           NSLog(@"Current object = %@", k);
+#endif
           if ([o isKindOfClass: [NSArray class]])
           {
             NSEnumerator *aen = [o objectEnumerator];
@@ -335,6 +350,11 @@
           {
             NSString *filteredString = [o stringByReplacingOccurrencesOfString: @"\n" withString: @""];
             [result addAttribute: k value: filteredString];
+          }
+          else
+          {
+            XMLNode *node = [o processObjectWithParser: parser];
+            [result addElement: node];
           }
         }
       }
