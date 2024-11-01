@@ -119,7 +119,6 @@
     @"textColor",
     @"backgroundColor",
     @"keyEquivalentFont",
-    @"concreteAttributedString",
     @"alternateObjectValue",
     nil];
   return _skippedKeys;
@@ -346,12 +345,12 @@
               [result addElement: arrayObject];
             }
           }
-          else if ([o isKindOfClass: [NSString class]])
+          else if ([o isKindOfClass: [NSString class]] || [o isKindOfClass: [NSAttributedString class]] == NO)
           {
             NSString *filteredString = [o stringByReplacingOccurrencesOfString: @"\n" withString: @""];
             [result addAttribute: k value: filteredString];
           }
-          else
+          else if ([o isKindOfClass: [NSString class]] == NO) // don't parse into these types...
           {
             XMLNode *node = [o processObjectWithParser: parser];
             [result addElement: node];
