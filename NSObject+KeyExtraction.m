@@ -88,6 +88,8 @@
   NSArray *_skippedClasses = [NSArray arrayWithObjects: 
     @"NSDynamicSystemColor",
     @"NSNamedColorSpace",
+    @"NSAttributedString",
+    @"NSConcreteAttributedString",
     nil];  
   return _skippedClasses;
 }
@@ -170,6 +172,14 @@
   return _nonObjects;
 }
 
++ (NSDictionary *) keyMappings
+{
+  NSMutableDictionary *_keyMappings = [NSMutableDictionary dictionary];
+  [_keyMappings setObject: [NSDictionary dictionaryWithObjectsAndKeys: @"title", @"stringValue", nil] 
+                   forKey: @"NSTextFieldCell"];
+  return _keyMappings;
+}
+
 - (NSSet *) keysForObject
 {
   NSArray *methods = [NSObject recursiveGetAllMethodsForClass: [self class]];
@@ -214,6 +224,11 @@
   NSString *name = [className classNameToTagName];
   XMLNode *result = [[XMLNode alloc] initWithName: name];
   NSString *oid = [parser oidForObject: self];
+
+  if ([[NSObject skippedClasses] containsObject: className])
+  {
+    return nil;
+  }
 
 #ifdef DEBUG
   if ([self isKindOfClass: [NSView class]])
@@ -315,12 +330,15 @@
         {
           XMLNode *node = [o processObjectWithParser: parser];
 
-          if ([o isKindOfClass: [NSCell class]])
+          if(node != nil)
           {
-            [node addAttribute: @"key" value: @"cell"];
-          }
+            if ([o isKindOfClass: [NSCell class]])
+            {
+              [node addAttribute: @"key" value: @"cell"];
+            }
 
-          [result addElement: node];
+            [result addElement: node];
+          }
         }
         else
         {
@@ -336,7 +354,10 @@
             while ((obj = [aen nextObject]) != nil)
             {
               XMLNode *xmlObject = [obj processObjectWithParser: parser];
-              [arrayObject addElement: xmlObject];
+              if (xmlObject != nil)
+              {
+                [arrayObject addElement: xmlObject];
+              }
             }
 
             // if count is greater than 0, then add the array, otherwise...
@@ -348,12 +369,25 @@
           else if ([o isKindOfClass: [NSString class]] || [o isKindOfClass: [NSAttributedString class]] == NO)
           {
             NSString *filteredString = [o stringByReplacingOccurrencesOfString: @"\n" withString: @""];
+            NSDictionary *dict = [[NSObject keyMappings] objectForKey: className];
+
+            if (dict != nil)
+            {
+              NSString *mappedKey = [dict objectForKey: k];
+              if (mappedKey != nil)
+              {
+                k = mappedKey;
+              }
+            }
             [result addAttribute: k value: filteredString];
           }
           else if ([o isKindOfClass: [NSString class]] == NO) // don't parse into these types...
           {
             XMLNode *node = [o processObjectWithParser: parser];
-            [result addElement: node];
+            if (node != nil)
+            {
+              [result addElement: node];
+            }
           }
         }
       }

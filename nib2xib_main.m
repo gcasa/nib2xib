@@ -41,10 +41,12 @@ int main(int argc, const char *argv[])
     NSString *outputXML = nil;
     BOOL f = NO;
 
+#ifdef DEBUG
     NSLog(@"--- Output");
     NSLog(@"parser = %@", parser);
     NSLog(@"output = \n%@", output);
-
+#endif
+    
     outputXML = [output description];
     f = [outputXML writeToFile: outputFileName 
                     atomically: YES];
