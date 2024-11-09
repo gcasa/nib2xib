@@ -168,6 +168,12 @@
     @"highlightsBy",
     @"showsStateBy",
     @"refusesFirstResponder",
+    @"isBezeled", 
+    @"isEnabled",
+    @"isScrollable",
+    @"isSelectable",
+    @"isEditable",
+    @"isBordered",
     nil];
   return _nonObjects;
 }
@@ -193,15 +199,26 @@
 		{
 	  	NSString *keyName = [selectorName substringFromIndex: 3];
       SEL s = NULL;
+      NSString *lowerKeyName = nil;
 
 		  keyName = [keyName stringByReplacingOccurrencesOfString: @":" withString: @""];
-		  keyName = [keyName lowercaseFirstCharacter];
+		  lowerKeyName = [keyName lowercaseFirstCharacter];
       
       // if the object responds, add it... this way we know it's a key.
-      s = NSSelectorFromString(keyName);
+      s = NSSelectorFromString(lowerKeyName);
       if (s != NULL)
       {
-	  	  [result addObject: keyName];
+	  	  [result addObject: lowerKeyName];
+      }
+      else
+      {
+        NSString *isKeyName = [NSString stringWithFormat: @"is%@", keyName];
+        s = NSSelectorFromString(isKeyName);
+
+        if(s != NULL)
+        {
+          [result addObject: isKeyName];
+        }
       }
 		}
   } 
@@ -243,12 +260,18 @@
     if ([[NSObject skippedKeys] containsObject: k] == NO)
     {
       SEL s = NSSelectorFromString(k);
+      NSMethodSignature *signature = [NSMethodSignature methodSignatureForSelector: s];
+      IMP imp = NULL;
 
       // If the selector is NULL, skip it...
-      if (s == NULL)
+      if (s == NULL && signature != nil)
       {
-        NSLog(@"ERROR getting the selector %@", k);
+        NSLog(@"ERROR getting the selector/signature %@", k);
         break;
+      }
+      else
+      {
+        imp = [self methodForSelector: s];
       }
 
       if ([[NSObject nonObjects] containsObject: k]) // frames, sizes, flags...
@@ -259,7 +282,6 @@
         if ([[NSObject keyObjects] containsObject: k])
         {
           XMLNode *node = nil;
-          IMP imp = [self methodForSelector: s];
 
           // rect/frame, etc... non objects
           if ([k hasSuffix: @"Rect"] || [k isEqualToString: @"frame"] || [k isEqualToString: @"bounds"])
@@ -309,12 +331,17 @@
         }
         else
         {
-          /*
-          IMP imp = [self methodForSelector: s];
-          unsigned int (*func)(id, SEL) = (unsigned int (*)(id, SEL))imp;
-          unsigned int v = (func)(self, s);
-          [self addAttribute: k value: [NSString stringWithFormat: @"%d", v]];
-          */
+          XMLNode *node = nil;
+
+          if ([k hasPrefix: @"is"])
+          {
+            BOOL (*func)(id, SEL) = (BOOL (*)(id, SEL))imp;
+            BOOL f = (func)(self, s);
+            NSString *name = [k stringByReplacingOccurrencesOfString: @"is" withString: @""];
+
+            name = [name lowercaseFirstCharacter];
+            [result addAttribute: name value: (f ? @"YES":@"NO") ];
+          }
         }
       }
       else // Objects...
