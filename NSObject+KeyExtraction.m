@@ -23,10 +23,8 @@
 #import <objc/objc.h>
 #import <objc/objc-class.h>
 
-#import <Foundation/NSObject.h>
-#import <Foundation/NSArray.h>
-#import <AppKit/NSView.h>
-#import <AppKit/NSCell.h>
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
 #import "NSObject+KeyExtraction.h"
 #import "NSString+Additions.h"
@@ -331,16 +329,40 @@
         }
         else
         {
-          XMLNode *node = nil;
+          BOOL (*func)(id, SEL) = (BOOL (*)(id, SEL))imp;
+          BOOL f = (func)(self, s);
 
-          if ([k hasPrefix: @"is"])
+          if ([k isEqualToString: @"isBezeled"])
           {
-            BOOL (*func)(id, SEL) = (BOOL (*)(id, SEL))imp;
-            BOOL f = (func)(self, s);
+            if (f == YES)
+            {
+              if ([self isKindOfClass: [NSTextField class]])
+              {
+                [result addAttribute: @"borderStyle" value: @"bezel"];
+              }
+              else
+              {
+                [result addAttribute: @"type" value: @"bevel"];
+              }
+            }
+          }
+          else if ([k isEqualToString: @"isBordered"])
+          {
+            if (f == YES)
+            {
+              [result addAttribute: @"borderStyle" value: @"border"];
+              NSLog(@"Bordered = %@", result);
+            }
+          }
+          else if ([k hasPrefix: @"is"])
+          {
             NSString *name = [k stringByReplacingOccurrencesOfString: @"is" withString: @""];
 
             name = [name lowercaseFirstCharacter];
-            [result addAttribute: name value: (f ? @"YES":@"NO") ];
+            if (f == YES)
+            {
+              [result addAttribute: name value: @"YES"];
+            }
           }
         }
       }
