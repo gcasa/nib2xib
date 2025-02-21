@@ -28,28 +28,6 @@
 #import "NSObject+KeyExtraction.h"
 
 @implementation NSView (toXML)
-/*
-- (NSMutableArray *) subviewsToXml: (id<OidProvider>) parser withParent: (XMLNode *)parent
-{
-    NSMutableArray *array = [NSMutableArray array];
-    NSEnumerator *en = [[self subviews] objectEnumerator];
-    NSView *v = nil;
-
-    while ((v = [en nextObject]) != nil)
-    {
-        XMLNode *n = [v toXMLWithParser: parser];
-        [array addObject: n];        
-    }
-
-    return array;
-}
-
-- (NSMutableDictionary *) attributesFromProperties
-{
-    NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    return result;
-}
-*/
 
 - (NSSet *) keysForObject
 {
