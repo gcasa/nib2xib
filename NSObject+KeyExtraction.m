@@ -336,7 +336,7 @@
           {
             if (f == YES)
             {
-              if ([self isKindOfClass: [NSTextField class]])
+              if ([self isKindOfClass: [NSTextFieldCell class]])
               {
                 [result addAttribute: @"borderStyle" value: @"bezel"];
               }
