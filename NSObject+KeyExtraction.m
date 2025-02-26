@@ -31,7 +31,7 @@
 #import "XMLNode.h"
 #import "OidProvider.h"
 
-#define DEBUG
+// #define DEBUG
 
 @implementation NSObject (KeyExtraction)
 
@@ -42,20 +42,27 @@
   struct objc_method_list *mlist;
   struct objc_class *superclass;
 
-  // NSLog(@"class = %@", cls);
+#ifdef DEBUG
+  NSLog(@"class = %@", cls);
+#endif
   if (cls == nil || cls == [NSObject class])
   {
     return;
   }
   
-  // NSLog(@"Processing method list...");
+#ifdef DEBUG
+  NSLog(@"Processing method list...");
+#endif
   while ( mlist = class_nextMethodList( cls, &iterator ) )
   {
   	unsigned int count = 0; 
   	unsigned int i = 0;
 
   	count = mlist->method_count;
+#ifdef DEBUG    
     // NSLog(@"count = %d", count);
+#endif
+
   	for (i = 0; i < count; i++)
   	{
     	struct objc_method method = mlist->method_list[i];
@@ -63,10 +70,14 @@
       NSString *methodName = NSStringFromSelector(method_name);
 
     	[methodsArray addObject: methodName];
-      // NSLog(@"i = %d, methodName = %@", i, methodName);
+#ifdef DEBUG
+      NSLog(@"i = %d, methodName = %@", i, methodName);
+#endif
   	}
   }
-  // NSLog(@"Done processing");
+#ifdef DEBUG
+  NSLog(@"Done processing");
+#endif
 
   // Recursively call this method for the superclass
   superclass = cls->super_class;
@@ -351,7 +362,9 @@
             if (f == YES)
             {
               [result addAttribute: @"borderStyle" value: @"border"];
+#ifdef DEBUG              
               NSLog(@"Bordered = %@", result);
+#endif
             }
           }
           else if ([k hasPrefix: @"is"])
