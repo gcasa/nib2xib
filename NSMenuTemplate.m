@@ -23,6 +23,11 @@
 
 #import "NSMenuTemplate.h"
 #import <Foundation/NSString.h>
+#import <Foundation/NSDictionary.h>
+#import <Foundation/NSArray.h>
+
+#import "XMLNode.h"
+#import "NIBParser.h"
 
 @implementation NSMenuTemplate (Methods)
 
@@ -79,6 +84,27 @@
 - (int) interfaceStyle
 {
 	return interfaceStyle;
+}
+
+- (NSString *) classNameForParser
+{
+    return @"NSMenu";
+}
+
+- (NSMutableDictionary *) attributesFromProperties: (id<OidProvider>) op
+{
+	NSString *ident = [op oidForObject: self];
+	return [NSMutableDictionary dictionaryWithObjectsAndKeys: title, @"title", @"main", @"systemMenu", ident, @"id", nil];
+}
+
+- (XMLNode *) toXMLWithParser: (id<OidProvider>)parser 
+{
+    NSMutableDictionary *attributes = [self attributesFromProperties: parser];
+    XMLNode *node = [[XMLNode alloc] initWithName: @"menu" value: @"" attributes: attributes elements: nil];
+
+    NSLog(@"node = %@", node);
+    
+    return node;
 }
 
 @end
