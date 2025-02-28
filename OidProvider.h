@@ -5,5 +5,6 @@
 @protocol OidProvider
 
 - (NSString *) oidForObject: (id)obj;
+- (NSString *) oidString;
 
 @end

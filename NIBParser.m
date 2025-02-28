@@ -138,7 +138,12 @@ void PrintMapTableOids(NSMapTable *mt)
 
 - (NSString *) oidString
 {
-	
+	static int n = 999999;
+	NSString *result = [NSString stringWithFormat: @"%08x", n--];
+	NSString *first = [result substringWithRange: NSMakeRange(0, 3)];
+	NSString *middle = [result substringWithRange: NSMakeRange(3, 2)];
+	NSString *last = [result substringWithRange: NSMakeRange(5, 3)];
+	return [NSString stringWithFormat: @"%@-%@-%@", first, middle, last];
 }
 
 - (id) parse

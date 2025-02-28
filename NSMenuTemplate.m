@@ -111,11 +111,16 @@
 	XMLNode *rootMenu = [[XMLNode alloc] initWithName: @"menu"];
 	XMLNode *rootItems = [[XMLNode alloc] initWithName: @"items"];
 
+	// Create structure...
 	[node addElement: itemsNode];
 	[itemsNode addElement: rootItem];
+	[rootItem addAttribute: @"id" value: [parser oidString]];
 	[rootItem addAttribute: @"title" value: [self title]];
 	[rootItem addElement: rootMenu];
 	[rootMenu addElement: rootItems];	
+	[rootMenu addAttribute: @"id" value: [parser oidString]];
+	[rootMenu addAttribute: @"title" value: [self title]];
+	[rootMenu addAttribute: @"key" value: @"submenu"];
 
     while ((o = [en nextObject]) != nil)
     {
