@@ -25,6 +25,7 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSArray.h>
+#import <AppKit/NSMatrix.h>
 
 #import "XMLNode.h"
 #import "NIBParser.h"
@@ -94,15 +95,39 @@
 - (NSMutableDictionary *) attributesFromProperties: (id<OidProvider>) op
 {
 	NSString *ident = [op oidForObject: self];
-	return [NSMutableDictionary dictionaryWithObjectsAndKeys: title, @"title", @"main", @"systemMenu", ident, @"id", nil];
+	return [NSMutableDictionary dictionaryWithObjectsAndKeys: @"Main Menu", @"title", @"main", @"systemMenu", ident, @"id", nil];
 }
 
 - (XMLNode *) toXMLWithParser: (id<OidProvider>)parser 
 {
     NSMutableDictionary *attributes = [self attributesFromProperties: parser];
     XMLNode *node = [[XMLNode alloc] initWithName: @"menu" value: @"" attributes: attributes elements: nil];
+    NSMatrix *matrix = [self supermenu];
+    NSArray *array = [matrix cells];
+    NSEnumerator *en = [array objectEnumerator];
+    id o = nil;
+	XMLNode *itemsNode = [[XMLNode alloc] initWithName: @"items"];
+	XMLNode *rootItem = [[XMLNode alloc] initWithName: @"menuItem"];
+	XMLNode *rootMenu = [[XMLNode alloc] initWithName: @"menu"];
+	XMLNode *rootItems = [[XMLNode alloc] initWithName: @"items"];
 
-    NSLog(@"node = %@", node);
+	[node addElement: itemsNode];
+	[itemsNode addElement: rootItem];
+	[rootItem addAttribute: @"title" value: [self title]];
+	[rootItem addElement: rootMenu];
+	[rootMenu addElement: rootItems];	
+
+    while ((o = [en nextObject]) != nil)
+    {
+    	XMLNode *itemNode = [o toXMLWithParser: parser];
+    	NSString *ident = [parser oidForObject: o];
+
+#ifdef DEBUG    	
+    	NSLog(@"o = %@", o);
+#endif
+    	[itemNode addAttribute: @"id" value: ident];
+		[rootItems addElement: itemNode];    	
+    }
     
     return node;
 }

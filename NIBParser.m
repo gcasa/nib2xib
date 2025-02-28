@@ -136,6 +136,11 @@ void PrintMapTableOids(NSMapTable *mt)
 	return [NSString stringWithFormat: @"%@-%@-%@", first, middle, last];
 }
 
+- (NSString *) oidString
+{
+	
+}
+
 - (id) parse
 {
 	NSArray *os = [NSArray arrayWithObjects: @"com.apple.InterfaceBuilder3.Cocoa.XIB", @"3.0", @"32700.99.1234", @"MacOSX.Cocoa", @"none", @"YES", @"direct", nil];
@@ -196,10 +201,10 @@ void PrintMapTableOids(NSMapTable *mt)
 		}
 		else if ([o isKindOfClass: [NSMenuTemplate class]])
 		{
-			XMLNode *menuNode = [o toXMLWithParser: self];
-			// NSString *clz = [ro className];
+			XMLNode *menu = [o toXMLWithParser: self];
 
-			NSLog(@"menuNode = %@", menuNode);
+			[objects addElement: menu];
+			// NSLog(@"menuNode = %@", menuNode);
 		}
 		else
 		{
