@@ -208,6 +208,8 @@ void PrintMapTableOids(NSMapTable *mt)
 		{
 			XMLNode *menu = [o toXMLWithParser: self];
 
+			[menu addAttribute: @"title" value: @"Main Menu"];
+			[menu addAttribute: @"systemMenu" value: @"main"];
 			[objects addElement: menu];
 			// NSLog(@"menuNode = %@", menuNode);
 		}

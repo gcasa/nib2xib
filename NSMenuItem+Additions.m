@@ -22,6 +22,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <AppKit/NSMenu.h>
 
 #import "NSMenuItem+Additions.h"
 #import "NSString+Additions.h"
@@ -32,23 +33,33 @@
 
 @implementation NSMenuItem (toXML)
 
-/*
 - (NSSet *) keysForObject
 {
-    NSSet *keys = [self keysForObject];
+    NSSet *keys = [super keysForObject];
     NSMutableSet *set = [NSMutableSet setWithSet: keys];
     return set;
 }
-*/
 
 - (XMLNode *) toXMLWithParser: (id<OidProvider>)parser
 {
     NSString *className = NSStringFromClass([self class]);
     NSString *tagName = [className classNameToTagName];
     XMLNode *itemNode = [[XMLNode alloc] initWithName: tagName];
+    id submenu = [self target];
 
-    // NSLog(@"set = %@", [self keysForObject]);
+    // NSLog(@"keys = %@", [self keysForObject]);
     [itemNode addAttribute: @"title" value: [self title]];
+
+    if (submenu != nil)
+    {
+        XMLNode *submenuNode = [submenu toXMLWithParser: parser];
+
+        [submenuNode addAttribute: @"title" value: [self title]];
+        [submenuNode addAttribute: @"key" value: @"submenu"];
+        // NSLog(@"target = %@", [self target]);
+        [itemNode addElement: submenuNode];
+    }
+
     return itemNode;
 }
 

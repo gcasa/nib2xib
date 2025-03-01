@@ -22,6 +22,14 @@
  */
 
 #import <AppKit/NSMenuItem.h>
+#import "OidProvider.h"
+
+@class NSMenu;
+@class XMLNode;
 
 @interface NSMenuItem (toXML)
+
+// - (NSMenu *) submenu;
+- (XMLNode *) toXMLWithParser: (id<OidProvider>)parser;
+
 @end

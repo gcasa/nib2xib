@@ -23,8 +23,10 @@
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSGeometry.h>
+#import "OidProvider.h"
 
 @class NSString;
+@class XMLNode;
 
 @interface NSMenuTemplate : NSObject
 {
@@ -55,5 +57,8 @@
 - (BOOL) isRequestMenu;
 - (BOOL) isFontMenu;
 - (int) interfaceStyle;
+
+// Parsing...
+- (XMLNode *) toXMLWithParser: (id<OidProvider>)parser;
 
 @end

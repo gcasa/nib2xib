@@ -95,7 +95,7 @@
 - (NSMutableDictionary *) attributesFromProperties: (id<OidProvider>) op
 {
 	NSString *ident = [op oidForObject: self];
-	return [NSMutableDictionary dictionaryWithObjectsAndKeys: @"Main Menu", @"title", @"main", @"systemMenu", ident, @"id", nil];
+	return [NSMutableDictionary dictionaryWithObjectsAndKeys: /* @"Main Menu", @"title", @"main", @"systemMenu", */ ident, @"id", nil];
 }
 
 - (XMLNode *) toXMLWithParser: (id<OidProvider>)parser 
@@ -110,8 +110,14 @@
 	XMLNode *rootItem = [[XMLNode alloc] initWithName: @"menuItem"];
 	XMLNode *rootMenu = [[XMLNode alloc] initWithName: @"menu"];
 	XMLNode *rootItems = [[XMLNode alloc] initWithName: @"items"];
+	XMLNode *keyMod = [[XMLNode alloc] initWithName: @"modifierMask"];
+
+	// NSLog(@"supermenu = %@", supermenu);
 
 	// Create structure...
+	[keyMod addAttribute: @"key" value: @"keyEquivalentModifierMask"];
+	[rootItem addElement: keyMod];
+
 	[node addElement: itemsNode];
 	[itemsNode addElement: rootItem];
 	[rootItem addAttribute: @"id" value: [parser oidString]];
